@@ -1,0 +1,31 @@
+postgresql://FSD-forum-DB_owner:Qkf4FoH5PLZn@ep-gentle-morning-a2y41n6y.eu-central-1.aws.neon.tech/FSD-forum-DB?sslmode=require
+
+psql -U postgres -d forumdb -f migrations/0000_fresh_ultimates.sql
+
+sudo vim pg_hba.conf 
+
+// app.js
+const postgres = require('postgres');
+require('dotenv').config();
+
+let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
+
+const sql = postgres({
+  host: PGHOST,
+  database: PGDATABASE,
+  username: PGUSER,
+  password: PGPASSWORD,
+  port: 5432,
+  ssl: 'require',
+  connection: {
+    options: `project=${ENDPOINT_ID}`,
+  },
+});
+
+async function getPgVersion() {
+  const result = await sql`select version()`;
+  console.log(result);
+}
+
+getPgVersion();
+
