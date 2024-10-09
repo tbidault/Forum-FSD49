@@ -45,7 +45,7 @@ import BottomNavBar from './components/BottomNavBar.vue';
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   margin: 0;
   padding: 0;

@@ -5,6 +5,7 @@ import LoginPage from '../pages/Login.vue';
 import RegisterPage from '../pages/Register.vue';
 import HomePage from '../pages/Home.vue';
 import ChatPage from '../pages/Chat.vue';
+import ThreadPage from '../pages/Thread.vue'
 import SettingsPage from '../pages/Settings.vue';
 import LegalMentionPage from '../pages/Legal_Mentions.vue';
 import TermsOfUse from '../pages/Terms_Of_Use.vue';
@@ -29,6 +30,11 @@ const routes = [
     path: '/chat',
     name: 'chat',
     component: ChatPage
+  },
+  {
+    path: '/thread/:id',
+    name: 'thread',
+    component: ThreadPage
   },
   {
     path: '/settings',

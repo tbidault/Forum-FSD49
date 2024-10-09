@@ -48,7 +48,7 @@ export const deleteUserById = async (req, res, next) => {
     catch (error) {
         next(error);
       }
-}
+};
 
 export const updateUserById = async (req, res, next) => {
     try {
@@ -58,5 +58,5 @@ export const updateUserById = async (req, res, next) => {
     catch (error) {
         next(error);
       }
-}
+};
 
