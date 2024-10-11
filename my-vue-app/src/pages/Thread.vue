@@ -3,13 +3,13 @@
     <div>thread page</div>
     <div>{{ route.params.id }}</div>
   </div>
-  <div v-if="posts.length">
-    <div v-if="isAuthenticated">
+  <div v-if="isAuthenticated">
     <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
       <input type="text" v-model="newMessage" placeholder="nouveau message" />
       <button @click="postMessage">envoyer</button>
     </div>
   </div>
+  <div v-if="posts.length">
     <div 
       v-for="(post, index) in posts" 
       :key="index" 

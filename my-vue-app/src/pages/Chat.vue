@@ -13,15 +13,21 @@
               {{ section.type }}
           </div>
         </div>
+        <div v-if="isAuthenticated && activeSection">
+          <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
+            <input type="text" v-model="newThreadTitle" placeholder="nouveau thread" />
+            <button @click="postThread()">créer</button>
+          </div>
+        </div>
         <div v-if="threads.length" style="margin-top:2rem;margin-bottom: 2rem">
           <div v-for="(thread, threadIndex) in threads" :key="threadIndex" style="color:white;margin-bottom: 0.5rem">
             <span 
-            @click="goToThread(thread.id)" 
-            style="cursor: pointer; color: white; text-decoration: underline;"
-          >
-          {{ thread.title }}
-        </span>
-              <span v-if="latestPosts[thread.id]">
+              @click="goToThread(thread.id)" 
+              style="cursor: pointer; color: white; text-decoration: underline;"
+            >
+              {{ thread.title }}
+            </span>
+            <span v-if="latestPosts[thread.id]">
               Dernier post : {{ new Date(latestPosts[thread.id]).toLocaleString() }}
             </span>
           </div>
@@ -38,8 +44,14 @@
   <script setup>
   import { useRouter } from 'vue-router';
   import axios from 'axios';
-  import { ref, onMounted } from 'vue'; 
+  import { ref, onMounted, computed } from 'vue';
+  import { useAuthStore } from '../stores/authStore';
 
+  const authStore = useAuthStore();
+
+  const isAuthenticated = computed(() => authStore.token !== null);
+  const newThreadTitle = ref('');
+  const activeSection = ref('');
   const router = useRouter();
   const sections = ref([]);
   const threads = ref([]);
@@ -63,6 +75,7 @@
 
   const fetchThreads = async (sectionId) => {
   loading.value = true;
+  activeSection.value = sectionId
   try {
     const response = await axios.get(`http://localhost:3000/threads/section/${sectionId}`);
     threads.value = response.data;
@@ -81,6 +94,19 @@
     loading.value = false;
   }
 };
+const postThread = async () => {
+  if (!newThreadTitle.value.trim()) return;
+    try {
+      const response = await axios.post('http://localhost:3000/threads', {
+      title: newThreadTitle.value,
+      section_id: activeSection.value,
+    });
+    newThreadTitle.value = '';
+    await fetchThreads(activeSection.value);
+    } catch(error) {
+        console.error('Erreur lors de la création du thread:', error);
+    }
+}
 
   // export default {
   //   name: 'ChatPage',
