@@ -4,6 +4,7 @@ import postRoutes from './postRoutes.js';
 import threadRoutes from './threadRoutes.js';
 import sectionRoutes from './sectionRoutes.js';
 import authRoutes from './authRoutes.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 

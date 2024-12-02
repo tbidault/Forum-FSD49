@@ -1,4 +1,5 @@
 import { selectUsers, selectUserById, selectUserByName, pushUser, deleteUser, updateUser } from '../models/userModel.js';
+import { upload } from '../upload.js';
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -9,9 +10,26 @@ export const getUsers = async (req, res, next) => {
       }
 };
 
+export const getUsersForAdmin = async (req, res, next) => {
+    try {
+        const users = await selectUsers();
+        const result = users.map(user => ({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            created_at: user.created_at,
+          }));
+        res.status(201).json(result);
+    }   catch (error) {
+        next(error);
+      }
+};
+
 export const getUserById = async (req, res, next) => {
     try {
         const result = await selectUserById(req.params.id);
+        console.log('user ', result);
         res.status(201).json(result);
     }   catch (error) {
         next(error);
@@ -51,12 +69,23 @@ export const deleteUserById = async (req, res, next) => {
 };
 
 export const updateUserById = async (req, res, next) => {
+    upload.single('avatar')(req, res, async (err) => {
+        if (err) {
+            return next(err);
+        }
     try {
-        const result = await updateUser(req.params.id, req.body);
+        console.log("Data:", req.body);
+        const updatedData = { ...req.body };
+        if (req.file) {
+            updatedData.avatar_url = `/uploads/${req.file.filename}`;
+          }
+        console.log("Updated Data:", updatedData);
+        const result = await updateUser(req.params.id, updatedData);
         res.status(201).json(result);
     }
     catch (error) {
         next(error);
       }
+    });
 };
 

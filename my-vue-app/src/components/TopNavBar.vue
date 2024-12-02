@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { watchEffect, ref, onMounted } from 'vue';
 import LogoutComp  from './logoutComp.vue';
 import { useAuthStore } from '../stores/authStore';
 
@@ -10,6 +10,15 @@ const components = {
 
 const route = useRoute();
 const authStore = useAuthStore();
+onMounted(async () => {
+  if (authStore.token && !authStore.isRoleFetched) {
+    await authStore.decodeToken();
+  }
+});
+watchEffect(() => {
+  console.log('authStore.isAdmin', authStore.isAdmin);
+});
+
 const logout = async () => {
   try {
     await authStore.logout();
@@ -39,7 +48,11 @@ const logout = async () => {
         <router-link to="/chat">Discussion</router-link>
       </li>
 
-      <li v-if="route.path !== '/settings'">
+      <li v-if="authStore.isAdmin && route.path !== '/dashboard' && !authStore.isLoading">
+        <router-link to="/dashboard">Dashboard</router-link>
+      </li>
+
+      <li v-if="authStore.isAuthenticated && route.path !== '/settings'">
         <router-link to="/settings">Paramètres</router-link>
       </li>
       <li v-if="authStore.token">

@@ -22,13 +22,19 @@
       </div>
       <div v-else>
         <div style="display: flex; flex-direction: column">
-          <div style="display: flex; flex-direction: row; justify-content: space-between;">
-          <div><strong>Auteur:</strong> {{ post.authorName }}</div>
-          <div><strong>Date de publication:</strong> {{ new Date(post.publication_date).toLocaleString() }}</div>
-        </div>
-        <div style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-          {{ post.content }}
-        </div>
+          <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+            <div style="display: flex; flex-direction: row; align-items: center; margin-right: 0.5rem;">
+              <img v-if="post.authorAvatar" 
+              :src="'http://localhost:3000' + post.authorAvatar" 
+               alt="Avatar" 
+               style="width: 40px; height: 40px; border-radius: 50%; margin-right: 0.5rem;" />
+            <div><strong>Auteur:</strong> {{ post.authorName }}</div>
+            </div>
+            <div><strong>Date de publication:</strong> {{ new Date(post.publication_date).toLocaleString() }}</div>
+          </div>
+          <div style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            {{ post.content }}
+          </div>
         </div>
         <div v-if="isAuthenticated && isAuthor(post.author_id)">
           <button @click="editPost(post.id, post.content)">Éditer</button>
@@ -65,6 +71,8 @@ const fetchPosts = async () => {
     for (const post of posts.value) {
       const authorResponse = await axios.get(`http://localhost:3000/users/${post.author_id}`);
       post.authorName = authorResponse.data[0].username;
+      post.authorAvatar = authorResponse.data[0].avatar_url ? authorResponse.data[0].avatar_url : null;
+      console.log(post.authorAvatar);
     }
     posts.value.sort((a, b) => new Date(a.publication_date) - new Date(b.publication_date));
   } catch (error) {

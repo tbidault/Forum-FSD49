@@ -12,7 +12,7 @@ export const login = async (req, res, next) => {
         // console.log("user", user);
         if (user[0].password == req.body.password) {
             const token = jwt.sign({id: user[0].id}, JWT_SECRET, {expiresIn: "4h"});
-            logger.info(`TOKEN HERE: ${token}`);
+            // logger.info(`TOKEN HERE: ${token}`);
             // logger.info('TOKEN HERE : ', token);
             // console.log('TOKEN HERE : ', token);
             // const decoded = jwt.decode(token);

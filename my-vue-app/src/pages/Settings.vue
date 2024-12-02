@@ -3,6 +3,7 @@
   <div class="formBlockLayout">
     <form class="formBlock6" @submit.prevent="onSubmit">
       <h2 class="formTitle">Paramètres</h2>
+      <p style="color:black">Modifier ses informations</p>
       <input
         id="name"
         v-model="name"
@@ -22,7 +23,6 @@
             type="password"
             class="blackPlaceholder"
             placeholder="Mot de passe"
-            required
           />
           <input
             id="confirmPassword"
@@ -30,7 +30,6 @@
             type="password"
             class="blackPlaceholder"
             placeholder="Confirmer le mot de passe"
-            required
           />
       <p v-if="errors.email" id="alert-msg06" class="alert-msg">
         Veuillez entrer une adresse e-mail valide.
@@ -38,7 +37,10 @@
       <p v-if="errors.password" id="alert-msg07" class="alert-msg">
         Les mots de passe ne correspondent pas. Veuillez réessayer.
       </p>
-      <SubmitComponent @go-back="goBack" />
+      <div>
+        <input type="file" @change="onFileChange" accept="image/png, image/jpeg" />
+      </div>
+      <SubmitComponent />
     </form>
   </div>
 </template>
@@ -48,22 +50,28 @@ import { ref } from 'vue';
 import axios from 'axios';
 import SubmitComponent from '../components/submit.vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
+import { jwtDecode } from 'jwt-decode';
 
 const components = {
     SubmitComponent,
 };
 
 const router = useRouter();
+const authStore = useAuthStore();
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const errors = ref({
-  incompleteForm: false,
   email: false,
   password: false,
 
 });
+const avatarFile = ref(null);
+const onFileChange = (event) => {
+  avatarFile.value = event.target.files[0];
+};
 
 const validateEmail = () => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -76,48 +84,43 @@ const validateEmail = () => {
 };
 
 const onSubmit = async () => {
-  errors.value.incompleteForm = false;
-  errors.value.password = false;
-
-  if (name.value === '' || email.value === '') {
-    errors.value.incompleteForm = true;
-    return;
-  }
-  if (!validateEmail()) {
-    return;
-  }
-  if (password.value !== confirmPassword.value) {
+  if (email.value && !validateEmail()) return;
+  if ((password.value || confirmPassword.value) && password.value !== confirmPassword.value) {
     errors.value.password = true;
     return;
   }
 
-  const user = {
-    username: name.value,
-    email: email.value,
-    password: password.value,
-  };
+  // const user = {};
+  const formUser = new FormData();
+  if (name.value) formUser.append('username', name.value);
+  if (email.value) formUser.append('email', email.value);
+  if (password.value) formUser.append('password', password.value);
+  if (avatarFile.value) {
+    formUser.append('avatar', avatarFile.value);
+  }
 
   try {
-    console.log("USER", user);
-    await axios.put('http://localhost:3000/users', user);
-    router.push('/login');
-    alert('User registered successfully!');
-    // Reset form fields after successful submission
+    const decodedToken = jwtDecode(authStore.token);
+    const userId = decodedToken.id;
+    console.log("FormData Content:", Array.from(formUser.entries()));
+    console.log("USER", formUser);
+    await axios.put(`http://localhost:3000/users/${userId}`, formUser, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+    router.push('/');
+    alert('User data updated successfully!');
     name.value = '';
     email.value = '';
     password.value = '';
     confirmPassword.value = '';
-    checked.value = false;
   } catch (error) {
-    console.error('Error registering user:', error);
-    alert('An error occurred while registering the user.');
+    console.error('Error updating user data:', error);
+    alert('An error occurred while updating user data.');
   }
 };
 
-const goBack = () => {
-  // Emit an event or handle navigation back
-  console.log('Going back...');
-};
 </script>
 <style src="./form-component.scss" lang="scss"></style>
 <style scoped>

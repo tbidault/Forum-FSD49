@@ -1,4 +1,4 @@
-import { selectSections, selectSectionById, pushSection } from '../models/sectionModel.js';
+import { selectSections, selectSectionById, pushSection, deleteSection } from '../models/sectionModel.js';
 
 export const getSections = async (req, res, next) => {
     try {
@@ -26,6 +26,16 @@ export const addSection = async (req, res, next) => {
         const result = await pushSection(Section);
         res.status(201).json(result);
     }   catch (error) {
+        next(error);
+      }
+};
+
+export const deleteSectionById = async (req, res, next) => {
+    try {
+        const result = await deleteSection(req.params.id);
+        res.status(201).json(result);
+    }
+    catch (error) {
         next(error);
       }
 };

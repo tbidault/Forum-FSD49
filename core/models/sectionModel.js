@@ -13,3 +13,7 @@ export const selectSectionById = async (id) => {
 export const pushSection = async (newSection) => {
     return await db.insert(sections).values(newSection).returning();
 }
+
+export const deleteSection = async (id) => {
+    return await db.delete(sections).where(eq(sections.id, id)).returning();
+}
