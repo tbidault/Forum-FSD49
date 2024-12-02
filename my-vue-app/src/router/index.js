@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
 
-// Importation des composants
 import LoginPage from '../pages/Login.vue';
 import RegisterPage from '../pages/Register.vue';
 import HomePage from '../pages/Home.vue';
@@ -9,6 +9,7 @@ import ThreadPage from '../pages/Thread.vue'
 import SettingsPage from '../pages/Settings.vue';
 import LegalMentionPage from '../pages/Legal_Mentions.vue';
 import TermsOfUse from '../pages/Terms_Of_Use.vue';
+import AdminDashboard from '../pages/AdminDashboard.vue';
 
 const routes = [
   {
@@ -37,6 +38,12 @@ const routes = [
     component: ThreadPage
   },
   {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: AdminDashboard,
+    meta: { requiresAdmin: true },
+  },
+  {
     path: '/settings',
     name: 'settings',
     component: SettingsPage
@@ -58,4 +65,18 @@ const router = createRouter({
   routes
 });
 
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+
+  if (to.meta.requiresAdmin) {
+    if (!authStore.userRole) {
+      await authStore.decodeToken();
+    }
+    if (authStore.userRole !== 'admin') {
+      console.error('Accès refusé : rôle admin requis');
+      return next('/chat');
+    }
+  }
+  next();
+});
 export default router;

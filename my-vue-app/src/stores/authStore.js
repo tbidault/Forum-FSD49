@@ -1,19 +1,43 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { jwtDecode } from 'jwt-decode';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token') || null,
+    userRole: null,
+    isLoading: false,
+    isRoleFetched: false,
   }),
   actions: {
     setToken(newToken) {
       this.token = newToken;
       localStorage.setItem('token', newToken);
+      this.decodeToken();
     },
     removeToken() {
       this.token = null;
+      this.userRole = null;
+      this.isRoleFetched = false;
       localStorage.removeItem('token');
+    },
+    async decodeToken() {
+      if (this.token) {
+        this.isLoading = true;
+        const decodedToken = jwtDecode(this.token);
+        try {
+          const user = await axios.get(`http://localhost:3000/users/${decodedToken.id}`);
+          this.userRole = user.data[0]?.role || null;
+          this.isRoleFetched = true;
+        } catch (error) {
+          console.error('Erreur lors de la récupération du rôle :', error);
+          this.userRole = null;
+          this.isRoleFetched = true;
+        } finally {
+          this.isLoading = false;
+        }
+      }
     },
     async login(user, router) {
       try {
@@ -40,9 +64,14 @@ export const useAuthStore = defineStore('auth', {
       try {
         await axios.get('http://localhost:3000/auth/logout');
         this.removeToken();
+        window.location.reload();
       } catch (error) {
         throw new Error('Logout failed');
       }
     },
+  },
+  getters: {
+    isAuthenticated: (state) => !!state.token,
+    isAdmin: (state) => state.userRole === 'admin' && !state.isLoading,
   },
 });
