@@ -33,27 +33,27 @@ const logout = async () => {
   <nav>
     <ul>
       <li v-if="route.path !== '/'">
-        <router-link to="/">Accueil</router-link>
+        <router-link to="/"><button>Accueil</button></router-link>
       </li>
       
       <li v-if="!authStore.token && route.path !== '/login'">
-        <router-link to="/login">Connexion</router-link>
+        <router-link to="/login"><button>Connexion</button></router-link>
       </li>
 
       <li v-if="!authStore.token && route.path !== '/register'">
-        <router-link to="/register">Créer un compte</router-link>
+        <router-link to="/register"><button>Créer un compte</button></router-link>
       </li>
 
       <li v-if="route.path !== '/chat'">
-        <router-link to="/chat">Discussion</router-link>
+        <router-link to="/chat"><button>Discussion</button></router-link>
       </li>
 
       <li v-if="authStore.isAdmin && route.path !== '/dashboard' && !authStore.isLoading">
-        <router-link to="/dashboard">Dashboard</router-link>
+        <router-link to="/dashboard"><button>Dashboard</button></router-link>
       </li>
 
       <li v-if="authStore.isAuthenticated && route.path !== '/settings'">
-        <router-link to="/settings">Paramètres</router-link>
+        <router-link to="/settings"><button>Paramètres</button></router-link>
       </li>
       <li v-if="authStore.token">
         <logout-comp />
@@ -63,6 +63,24 @@ const logout = async () => {
 </template>
 
 <style scoped>
+button {
+  padding: 10px 20px;
+  background-color: #e3dcdc1e;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 nav ul {
   list-style-type: none;
   padding: 0;

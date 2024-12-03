@@ -8,17 +8,35 @@ const route = useRoute();
   <nav>
     <ul>
       <li v-if="route.path !== '/legal-mentions'">
-        <router-link to="/legal-mentions">Mentions légales</router-link>
+        <router-link to="/legal-mentions"><button>Mentions légales</button></router-link>
       </li>
       
       <li v-if="route.path !== '/terms-of-use'">
-        <router-link to="/terms-of-use">Règles d'utilisation</router-link>
+        <router-link to="/terms-of-use"><button>Règles d'utilisation</button></router-link>
       </li>
     </ul>
   </nav>
 </template>
 
 <style scoped>
+button {
+  padding: 10px 20px;
+  background-color: #e3dcdc1e;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
 nav ul {
     list-style-type: none;
     padding: 0;

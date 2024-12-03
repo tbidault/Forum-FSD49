@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div style="margin-top: 2rem">
     <h1>Dashboard Administrateur</h1>
-    <table style="border: 1px solid white; color: white; padding: 1rem; margin-bottom: 0.5rem;">
+    <table class="users-table">
       <thead>
         <tr>
           <th>Nom d'utilisateur</th>
@@ -21,19 +21,18 @@
             </select>
           </td>
           <td>
-            <button @click="deleteUser(user.id)">Supprimer</button>
+            <button @click="deleteUser(user.id)" class="delete-btn">Supprimer</button>
           </td>
         </tr>
       </tbody>
     </table>
-    <p style="color:white">Liste des utilisateurs</p>
-
-    <div v-if="users.length" style="margin-top: 2rem;">
+    <div v-if="users.length" class="user-container">
+      <h2 style="color:white">Liste des utilisateurs</h2>
       <div
         v-for="(user, index) in users"
         :key="index"
         @click="selectUser(user)"
-        style="border: 1px solid white; color: white; padding: 1rem; margin-bottom: 0.5rem; cursor: pointer;"
+        class="user-card"
       >
         <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
         <p><strong>Email :</strong> {{ user.email }}</p>
@@ -52,7 +51,7 @@
               <p><strong>Message :</strong> {{ message.content }}</p>
               <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
             </div>
-            <button @click="deleteMessage(message.id)" class="delete-message-btn">Supprimer</button>
+            <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
             <hr class="message-divider" />
           </li>
         </ul>
@@ -65,80 +64,93 @@
       <p style="color: white;">Chargement des utilisateurs...</p>
     </div>
     -->
-    <h2 style="color:white">Gestion des Sections</h2>
-    <div>
-      <input
-        v-model="newSectionType"
-        placeholder="Nom de la nouvelle section"
-        style="margin-bottom: 1rem; padding: 0.5rem;"
-      />
-      <button @click="addSection" style="padding: 0.5rem; background-color: #4caf50; color: white;">
-        Ajouter une section
-      </button>
-    </div>
-    <div v-if="sections.length" class="section-list">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        class="section-item"
-        @click="selectSection(section)"
-      >
-        <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
-        <button @click.stop="deleteSection(section.id)" class="delete-section-btn">
-          Supprimer
+    <div class="card">
+      <h2 style="color:white">Gestion des Sections</h2>
+      <div>
+        <input
+          v-model="newSectionType"
+          placeholder="Nom de la nouvelle section"
+          style="margin-bottom: 1rem; padding: 0.41rem;"
+        />
+        <button @click="addSection" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+          Ajouter une section
         </button>
       </div>
-    </div>
-    <div v-if="selectedSection" class="modal">
-      <div class="modal-content">
-        <h2>Threads de la section : {{ selectedSection.type }}</h2>
-        <ul v-if="threads.length" class="thread-list">
-          <li v-for="thread in threads" :key="thread.id" class="thread-item">
-            <div class="thread-text">
-              <p><strong>Titre :</strong> {{ thread.title }}</p>
-            </div>
-            <button @click="viewThreadMessages(thread.id)" class="view-thread-btn">
-              Voir les messages
-            </button>
-            <button @click="deleteThread(thread.id)" class="delete-thread-btn">Supprimer</button>
-            <hr class="thread-divider" />
-          </li>
-        </ul>
-        <p v-else>Pas de threads dans cette section.</p>
-        <button @click="closeModal" class="close-modal-btn">Fermer</button>
-        <div v-if="showNewThreadForm">
-          <input
-            v-model="newThreadTitle"
-            placeholder="Titre du nouveau thread"
-            style="margin-bottom: 1rem; padding: 0.5rem;"
-          />
-          <button @click="createThread" style="padding: 0.5rem; background-color: #4caf50; color: white;">
-            Créer un thread
-          </button>
-          <button @click="toggleNewThreadForm" style="padding: 0.5rem; background-color: #f44336; color: white;">
-            Annuler
+      <div v-if="sections.length" class="section-list">
+        <div style="display: flex; justify-content: space-between; color: white; font-weight: bold; padding-bottom: 0.5rem;">
+          <p style="flex: 1;">Nom de la section</p>
+          <p style="width: 80px; text-align: center;">Actions</p>
+        </div>
+        <div
+          v-for="section in sections"
+          :key="section.id"
+          class="section-item"
+          @click="selectSection(section)"
+        >
+          <!--
+          <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
+          -->
+          <p style="flex: 1; color:white">{{ section.type }}</p>
+          <button
+            @click.stop="deleteSection(section.id)"
+            class="delete-btn"
+            style="padding: 0.25rem 0.5rem; background-color: #f44336; color: white; border-radius: 4px; border: none;"
+          >
+            Supprimer
           </button>
         </div>
-        <button @click="toggleNewThreadForm" style="padding: 0.5rem; background-color: #4caf50; color: white;">
-          Nouveau Thread
-        </button>
       </div>
-    </div>
-    <div v-if="selectedThread" class="modal">
-      <div class="modal-content">
-        <h2>Messages du thread</h2>
-        <ul v-if="threadMessages.length" class="message-list">
-          <li v-for="message in threadMessages" :key="message.id" class="message-item">
-            <div class="message-text">
-              <p><strong>Message :</strong> {{ message.content }}</p>
-              <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
-            </div>
-            <button @click="deleteMessage(message.id)" class="delete-message-btn">Supprimer</button>
-            <hr class="message-divider" />
-          </li>
-        </ul>
-        <p v-else>Pas de messages dans ce thread.</p>
-        <button @click="closeThreadModal" class="close-modal-btn">Fermer</button>
+      <div v-if="selectedSection" class="modal">
+        <div class="modal-content">
+          <h2>Threads de la section : {{ selectedSection.type }}</h2>
+          <ul v-if="threads.length" class="thread-list">
+            <li v-for="thread in threads" :key="thread.id" class="thread-item">
+              <div class="thread-text">
+                <p><strong>Titre :</strong> {{ thread.title }}</p>
+              </div>
+              <button @click="viewThreadMessages(thread.id)" class="view-thread-btn">
+                Voir les messages
+              </button>
+              <button @click="deleteThread(thread.id)" class="delete-thread-btn">Supprimer</button>
+              <hr class="thread-divider" />
+            </li>
+          </ul>
+          <p v-else>Pas de threads dans cette section.</p>
+          <div v-if="showNewThreadForm">
+            <input
+              v-model="newThreadTitle"
+              placeholder="Titre du nouveau thread"
+              class="input-new-thread"
+            />
+            <button @click="createThread" class="btn-create-thread">
+              Créer un thread
+            </button>
+            <button @click="toggleNewThreadForm" class="btn-cancel-thread">
+              Annuler
+            </button>
+          </div>
+          <button @click="closeModal" class="close-modal-btn">Fermer</button>
+          <button v-if="!showNewThreadForm" @click="toggleNewThreadForm" class="new-thread-btn">
+            Nouveau Thread
+          </button>
+        </div>
+      </div>
+      <div v-if="selectedThread" class="modal">
+        <div class="modal-content">
+          <h2>Messages du thread</h2>
+          <ul v-if="threadMessages.length" class="message-list">
+            <li v-for="message in threadMessages" :key="message.id" class="message-item">
+              <div class="message-text">
+                <p><strong>Message :</strong> {{ message.content }}</p>
+                <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
+              </div>
+              <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
+              <hr class="message-divider" />
+            </li>
+          </ul>
+          <p v-else>Pas de messages dans ce thread.</p>
+          <button @click="closeThreadModal" class="close-modal-btn">Fermer</button>
+        </div>
       </div>
     </div>
   </div>
@@ -346,6 +358,7 @@ const closeModal = () => {
   userMessages.value = [];
   selectedSection.value = null;
   threads.value = [];
+  showNewThreadForm.value = false;
   // selectedThread.value = null;
   // threadMessages.value = [];
 };
@@ -362,6 +375,26 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+button {
+  padding: 0.5rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+.btn-create-thread {
+  background-color: #4caf50;
+}
+.btn-cancel-thread {
+  margin-left: 0.5rem;
+  background-color: #f44336;
+}
+.input-new-thread {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+  padding: 0.5rem;
+}
 .dashboard-title {
   color: white;
   margin-bottom: 2rem;
@@ -393,6 +426,32 @@ onMounted(async () => {
   background-color: #ff1744;
 }
 
+.users-table {
+  color: white;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.users-table th, .users-table td {
+  padding: 0.5rem;
+  text-align: left;
+}
+.users-table td {
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.users-table select {
+  height: 2rem;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+  color: black;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+} 
 .user-list {
   margin-top: 2rem;
 }
@@ -408,7 +467,34 @@ onMounted(async () => {
 .user-block:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
+.user-container {
+  margin-top: 2rem;
+}
+.user-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  /* border: 1px solid transparent; */
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.user-card:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  border-color: white;
+}
 
+.user-card p {
+  margin: 0.3rem 0;
+}
+
+.user-card p strong {
+  font-weight: bold;
+}
 .modal {
   position: fixed;
   top: 0;
@@ -459,6 +545,7 @@ onMounted(async () => {
 }
 .message-text{
   color: black;
+  text-overflow: ellipsis;
 }
 
 .message-divider {
@@ -468,7 +555,8 @@ onMounted(async () => {
   margin: 1rem 0;
 }
 
-.delete-message-btn {
+.delete-btn {
+  height: 2rem;
   margin-left: auto;
   background-color: #ff5252;
   color: white;
@@ -478,7 +566,97 @@ onMounted(async () => {
   cursor: pointer;
 }
 
-.delete-message-btn:hover {
+.delete-btn:hover {
   background-color: #ff1744;
 }
+.thread-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.thread-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.thread-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thread-item button {
+  margin-left: 0.5rem;
+}
+
+.thread-item .delete-thread-btn {
+  background-color: #f44336;
+  border-radius: 4px;
+  color: white;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.thread-item .view-thread-btn {
+  background-color: #4caf50;
+  border-radius: 4px;
+  color: white;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+.new-thread-btn {
+  margin-left: 0.5rem;
+  padding: 0.5rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.new-thread-btn:hover {
+  background-color: #45a049;
+}
+
+.new-thread-btn:focus {
+  outline: none;
+}
+
+.card, .user-container, .users-table {
+    padding: 20px;
+    margin-top: 2rem;
+    border-radius: 10px;
+    border: 2px solid #333;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+
+  .card h2, .user-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .section-item { 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.section-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+  
 </style>
