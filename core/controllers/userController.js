@@ -29,7 +29,7 @@ export const getUsersForAdmin = async (req, res, next) => {
 export const getUserById = async (req, res, next) => {
     try {
         const result = await selectUserById(req.params.id);
-        console.log('user ', result);
+        // console.log('user ', result);
         res.status(201).json(result);
     }   catch (error) {
         next(error);

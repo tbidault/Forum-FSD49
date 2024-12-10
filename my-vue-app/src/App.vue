@@ -10,7 +10,7 @@ import BottomNavBar from './components/BottomNavBar.vue';
       <h1 class="logo">TECHNOFORUM</h1>
       <TopNavBar class="navbar"/>
     </div>
-    <div class="col">
+    <div class="main-content col">
       <router-view />
       <BottomNavBar />
     </div>
@@ -56,7 +56,7 @@ import BottomNavBar from './components/BottomNavBar.vue';
 }
 .background {
   /* background-image: url(https://oleciocdn.fra1.cdn.digitaloceanspaces.com/prod/CorporatePage/background-img-wood.jpg); */
-  background: linear-gradient(to top, #000000, #333333);
+  /* background: linear-gradient(to top, #000000, #333333); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -66,5 +66,30 @@ import BottomNavBar from './components/BottomNavBar.vue';
   padding: 0;
   overflow: hidden;
   position: relative;
+}
+@media (max-width: 768px) {
+  .row h1 {
+    margin-right: 0;
+  }
+  .logo {
+    margin-top: 4rem;
+    font-size: 20px;
+    padding: 10px 20px;
+    max-width: 150px;
+    width: 80%;
+  }
+  .navbar {
+  margin-left: 0;
+  }
+  .row{
+    display: flex;
+    flex-direction: column;
+  }
+  .background{
+    margin-bottom: 10rem;
+  }
+  .main-content{
+    margin-top:2rem;
+  }
 }
 </style>

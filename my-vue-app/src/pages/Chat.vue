@@ -1,13 +1,15 @@
 <template>
-    <div>
-      <h1>Espace de discussion</h1>
-      <p>Page de discussion</p>
+  <main>
+    <h1 style="text-align: center; margin-top: 2.5rem;">Espace de discussion</h1>
+    <div class="chat-container">
+      <!--
       <div v-if="isAdmin">
         <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
             <input type="text" v-model="newSectionType" placeholder="nouvelle section" />
             <button @click="postSection()">créer</button>
           </div>
       </div>
+      -->
       <div v-if="sections.length">
         <div style="display: flex;flex-direction: row;justify-content: space-around">
           <div 
@@ -20,21 +22,40 @@
           </div>
         </div>
         <div v-if="isAuthenticated && activeSection">
+          <!--
           <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
             <input type="text" v-model="newThreadTitle" placeholder="nouveau thread" />
             <button @click="postThread()">créer</button>
           </div>
+          -->
+          <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
+            <input
+            v-model="newThreadTitle"
+            placeholder="Nouveau sujet"
+            style="padding: 0.41rem;"
+          />
+          <button @click="postThread" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+            Envoyer
+          </button>
+          </div>
         </div>
-        <div v-if="threads.length" style="margin-top:2rem;margin-bottom: 2rem">
-          <div v-for="(thread, threadIndex) in threads" :key="threadIndex" style="color:white;margin-bottom: 0.5rem">
+        <div v-if="threads.length" class="thread-list">
+          <div class="chat-subTitles">
+            <p>Liste des sujets</p>
+            <p id="last-post">Dernier post</p>
+          </div> 
+          <div v-for="(thread, threadIndex) in threads" :key="threadIndex" class="thread-item" style="color:white;margin-bottom: 0.5rem">
             <span 
-              @click="goToThread(thread.id)" 
-              style="cursor: pointer; color: white; text-decoration: underline;"
+              @click="goToThread(thread.id)"
+              class="thread-elem thread-title" 
+              style="cursor: pointer; color: white;"
             >
               {{ thread.title }}
             </span>
-            <span v-if="latestPosts[thread.id]">
-              Dernier post : {{ new Date(latestPosts[thread.id]).toLocaleString() }}
+            <span v-if="latestPosts[thread.id]"
+              class="thread-elem thread-date"
+            >
+              {{ new Date(latestPosts[thread.id]).toLocaleString() }}
             </span>
           </div>
         </div>
@@ -45,7 +66,8 @@
         <div v-else-if="!sections.length">Chargement des sections...</div>
       </div>
     </div>
-  </template>
+  </main>
+</template>
   
   <script setup>
   import { useRouter } from 'vue-router';
@@ -65,7 +87,7 @@
   const threads = ref([]);
   const latestPosts = ref({});
   const loading = ref(false);
-  const isAdmin = ref(false);
+  // const isAdmin = ref(false);
 
   onMounted(async () => {
   try {
@@ -76,12 +98,14 @@
       try {
         const user = await axios.get(`http://localhost:3000/users/${decodedToken.id}`);
         console.log('role ', user.data[0].role);  
-        isAdmin.value = user.data[0].role === 'admin';
+        // isAdmin.value = user.data[0].role === 'admin';
       } catch (error) {
         console.error(error);
         return false;
       }
     }
+
+    await fetchThreads(sections.value[1].id);
   } catch (error) {
     console.error('error !!!', error);
     console.error('Network error:', error.request);
@@ -153,5 +177,82 @@ const postThread = async () => {
   //   name: 'ChatPage',
     
   // }
-  </script>
+</script>
+<style scoped>
+.chat-container {
+    padding: 20px;
+    padding-top: 40px;
+    /* margin-top: 2rem; */
+    border-radius: 10px;
+    border: 2px solid #333;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+  .thread-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .thread-title {
+    flex: 1;
+  }
+  .thread-date {
+    flex: 1;
+    text-align: right;
+  }
+  .chat-subTitles{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .thread-elem{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .thread-list{
+    margin-top:2rem;
+    margin-bottom: 2rem;
+  }
+  @media screen and (min-width: 1200px) {
+    main{
+      min-width: 550px;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    h1{
+      font-size: 1.5rem; /* 24px */
+line-height: 2rem; /* 32px */
+    }
+    main {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .chat-container {
+      padding-top: 30px;
+    }
+    .thread-list{
+      margin-top:1rem;
+      margin-bottom: 1rem;
+    }
+    .thread-item{
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    .thread-elem{
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+    #last-post{
+      display: none;
+    }
+    .thread-date{
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+</style>
   

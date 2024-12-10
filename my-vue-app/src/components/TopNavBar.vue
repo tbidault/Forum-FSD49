@@ -90,4 +90,18 @@ nav ul li {
   display: inline;
   margin-right: 20px;
 }
+@media (max-width: 768px) {
+  button {
+    font-size: 10px;
+    padding: 6px 8px;
+  } 
+
+  nav ul li {
+    margin-bottom: 10px;
+  }
+  nav ul li {
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+  }
+}
 </style>

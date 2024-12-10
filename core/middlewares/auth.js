@@ -11,8 +11,8 @@ export const authMiddleware = async(req, res, next) => {
     }
 
     try {
-        console.log('JWT_SECRET', JWT_SECRET);
-        console.log('token', token);
+        // console.log('JWT_SECRET', JWT_SECRET);
+        // console.log('token', token);
         jwt.verify(token, JWT_SECRET);
         return next();
     } catch(error) {

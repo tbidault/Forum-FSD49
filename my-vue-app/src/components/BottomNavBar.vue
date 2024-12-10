@@ -50,4 +50,21 @@ nav ul li {
   display: inline;
   margin-right: 20px;
 }
+
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    margin-left: 1rem;
+}
+  nav ul li {
+  display: inline;
+  margin-right: 1rem;
+}
+  button {
+    font-size: 10px;
+    padding: 10px 10px;
+  } 
+}
 </style>

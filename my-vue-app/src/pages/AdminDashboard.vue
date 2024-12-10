@@ -1,146 +1,54 @@
 <template>
-    <div style="margin-top: 2rem">
-    <h1>Dashboard Administrateur</h1>
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th>Nom d'utilisateur</th>
-          <th>Email</th>
-          <th>Rôle</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <select v-model="user.role" @change="updateRole(user.id, user.role)">
-              <option value="user">Utilisateur</option>
-              <option value="admin">Admin</option>
-            </select>
-          </td>
-          <td>
-            <button @click="deleteUser(user.id)" class="delete-btn">Supprimer</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div v-if="users.length" class="user-container">
-      <h2 style="color:white">Liste des utilisateurs</h2>
-      <div
-        v-for="(user, index) in users"
-        :key="index"
-        @click="selectUser(user)"
-        class="user-card"
-      >
-        <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
-        <p><strong>Email :</strong> {{ user.email }}</p>
-        <p><strong>Rôle :</strong> {{ user.role }}</p>
-        <p><strong>Date de création :</strong> {{ new Date(user.created_at).toLocaleString() }}</p>
-      </div>
-    </div>
-
-    <div v-if="selectedUser" class="modal">
-      <div class="modal-content">
-        <h2>Messages de {{ selectedUser.username }}</h2>
-        <ul v-if="userMessages.length" class="message-list">
-          <li v-for="message in userMessages" :key="message.id" class="message-item">
-            <div class="message-text">
-              <p><strong>Thread :</strong> {{ message.thread_name }}</p>
-              <p><strong>Message :</strong> {{ message.content }}</p>
-              <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
-            </div>
-            <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
-            <hr class="message-divider" />
-          </li>
-        </ul>
-        <p v-else>Pas de messages pour cet utilisateur.</p>
-        <button @click="closeModal" class="close-modal-btn">Fermer</button>
-      </div>
-    </div>
-    <!--
-    <div v-else>
-      <p style="color: white;">Chargement des utilisateurs...</p>
-    </div>
-    -->
-    <div class="card">
-      <h2 style="color:white">Gestion des Sections</h2>
-      <div>
-        <input
-          v-model="newSectionType"
-          placeholder="Nom de la nouvelle section"
-          style="margin-bottom: 1rem; padding: 0.41rem;"
-        />
-        <button @click="addSection" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
-          Ajouter une section
-        </button>
-      </div>
-      <div v-if="sections.length" class="section-list">
-        <div style="display: flex; justify-content: space-between; color: white; font-weight: bold; padding-bottom: 0.5rem;">
-          <p style="flex: 1;">Nom de la section</p>
-          <p style="width: 80px; text-align: center;">Actions</p>
-        </div>
+  <main style="margin-top: 2rem;">
+    <div style="width: 100%">
+      <h1>Dashboard Administrateur</h1>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Nom d'utilisateur</th>
+            <th class="mail-header">Email</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.username }}</td>
+            <td class="mail-value">{{ user.email }}</td>
+            <td>
+              <select v-model="user.role" @change="updateRole(user.id, user.role)">
+                <option value="user">Utilisateur</option>
+                <option value="admin">Admin</option>
+              </select>
+            </td>
+            <td>
+              <button @click="deleteUser(user.id)" class="delete-btn">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-if="users.length" class="user-container">
+        <h2 style="color:white">Liste des utilisateurs</h2>
         <div
-          v-for="section in sections"
-          :key="section.id"
-          class="section-item"
-          @click="selectSection(section)"
+          v-for="(user, index) in users"
+          :key="index"
+          @click="selectUser(user)"
+          class="user-card"
         >
-          <!--
-          <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
-          -->
-          <p style="flex: 1; color:white">{{ section.type }}</p>
-          <button
-            @click.stop="deleteSection(section.id)"
-            class="delete-btn"
-            style="padding: 0.25rem 0.5rem; background-color: #f44336; color: white; border-radius: 4px; border: none;"
-          >
-            Supprimer
-          </button>
+          <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+          <p><strong>Email :</strong> {{ user.email }}</p>
+          <p><strong>Rôle :</strong> {{ user.role }}</p>
+          <p><strong>Date de création :</strong> {{ new Date(user.created_at).toLocaleString() }}</p>
         </div>
       </div>
-      <div v-if="selectedSection" class="modal">
+
+      <div v-if="selectedUser" class="modal">
         <div class="modal-content">
-          <h2>Threads de la section : {{ selectedSection.type }}</h2>
-          <ul v-if="threads.length" class="thread-list">
-            <li v-for="thread in threads" :key="thread.id" class="thread-item">
-              <div class="thread-text">
-                <p><strong>Titre :</strong> {{ thread.title }}</p>
-              </div>
-              <button @click="viewThreadMessages(thread.id)" class="view-thread-btn">
-                Voir les messages
-              </button>
-              <button @click="deleteThread(thread.id)" class="delete-thread-btn">Supprimer</button>
-              <hr class="thread-divider" />
-            </li>
-          </ul>
-          <p v-else>Pas de threads dans cette section.</p>
-          <div v-if="showNewThreadForm">
-            <input
-              v-model="newThreadTitle"
-              placeholder="Titre du nouveau thread"
-              class="input-new-thread"
-            />
-            <button @click="createThread" class="btn-create-thread">
-              Créer un thread
-            </button>
-            <button @click="toggleNewThreadForm" class="btn-cancel-thread">
-              Annuler
-            </button>
-          </div>
-          <button @click="closeModal" class="close-modal-btn">Fermer</button>
-          <button v-if="!showNewThreadForm" @click="toggleNewThreadForm" class="new-thread-btn">
-            Nouveau Thread
-          </button>
-        </div>
-      </div>
-      <div v-if="selectedThread" class="modal">
-        <div class="modal-content">
-          <h2>Messages du thread</h2>
-          <ul v-if="threadMessages.length" class="message-list">
-            <li v-for="message in threadMessages" :key="message.id" class="message-item">
+          <h2>Messages de {{ selectedUser.username }}</h2>
+          <ul v-if="userMessages.length" class="message-list">
+            <li v-for="message in userMessages" :key="message.id" class="message-item">
               <div class="message-text">
+                <p><strong>Thread :</strong> {{ message.thread_name }}</p>
                 <p><strong>Message :</strong> {{ message.content }}</p>
                 <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
               </div>
@@ -148,12 +56,106 @@
               <hr class="message-divider" />
             </li>
           </ul>
-          <p v-else>Pas de messages dans ce thread.</p>
-          <button @click="closeThreadModal" class="close-modal-btn">Fermer</button>
+          <p v-else>Pas de messages pour cet utilisateur.</p>
+          <button @click="closeModal" class="close-modal-btn">Fermer</button>
+        </div>
+      </div>
+      <!--
+      <div v-else>
+        <p style="color: white;">Chargement des utilisateurs...</p>
+      </div>
+      -->
+      <div class="card">
+        <h2 style="color:white">Gestion des Sections</h2>
+        <div>
+          <input
+            v-model="newSectionType"
+            placeholder="Nom de la nouvelle section"
+            style="margin-bottom: 1rem; padding: 0.41rem;"
+          />
+          <button @click="addSection" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+            Ajouter une section
+          </button>
+        </div>
+        <div v-if="sections.length" class="section-list">
+          <div style="display: flex; justify-content: space-between; color: white; font-weight: bold; padding-bottom: 0.5rem;">
+            <p style="flex: 1;">Nom de la section</p>
+            <p style="width: 80px; text-align: center;">Actions</p>
+          </div>
+          <div
+            v-for="section in sections"
+            :key="section.id"
+            class="section-item"
+            @click="selectSection(section)"
+          >
+            <!--
+            <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
+            -->
+            <p style="flex: 1; color:white">{{ section.type }}</p>
+            <button
+              @click.stop="deleteSection(section.id)"
+              class="delete-btn"
+              style="padding: 0.25rem 0.5rem; background-color: #f44336; color: white; border-radius: 4px; border: none;"
+            >
+              Supprimer
+            </button>
+          </div>
+        </div>
+        <div v-if="selectedSection" class="modal">
+          <div class="modal-content">
+            <h2>Threads de la section : {{ selectedSection.type }}</h2>
+            <ul v-if="threads.length" class="thread-list">
+              <li v-for="thread in threads" :key="thread.id" class="thread-item">
+                <div class="thread-text">
+                  <p><strong>Titre :</strong> {{ thread.title }}</p>
+                </div>
+                <button @click="viewThreadMessages(thread.id)" class="view-thread-btn">
+                  Voir les messages
+                </button>
+                <button @click="deleteThread(thread.id)" class="delete-thread-btn">Supprimer</button>
+                <hr class="thread-divider" />
+              </li>
+            </ul>
+            <p v-else>Pas de threads dans cette section.</p>
+            <div v-if="showNewThreadForm">
+              <input
+                v-model="newThreadTitle"
+                placeholder="Titre du nouveau thread"
+                class="input-new-thread"
+              />
+              <button @click="createThread" class="btn-create-thread">
+                Créer un thread
+              </button>
+              <button @click="toggleNewThreadForm" class="btn-cancel-thread">
+                Annuler
+              </button>
+            </div>
+            <button @click="closeModal" class="close-modal-btn">Fermer</button>
+            <button v-if="!showNewThreadForm" @click="toggleNewThreadForm" class="new-thread-btn">
+              Nouveau Thread
+            </button>
+          </div>
+        </div>
+        <div v-if="selectedThread" class="modal">
+          <div class="modal-content">
+            <h2>Messages du thread</h2>
+            <ul v-if="threadMessages.length" class="message-list">
+              <li v-for="message in threadMessages" :key="message.id" class="message-item">
+                <div class="message-text">
+                  <p><strong>Message :</strong> {{ message.content }}</p>
+                  <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
+                </div>
+                <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
+                <hr class="message-divider" />
+              </li>
+            </ul>
+            <p v-else>Pas de messages dans ce thread.</p>
+            <button @click="closeThreadModal" class="close-modal-btn">Fermer</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -658,5 +660,90 @@ button {
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-  
+@media (max-width: 768px) {
+  h1{
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  /* table{
+    max-width: 100%;
+  } */
+  .users-table{
+    width: 100%;
+    padding: 0.35rem;
+  }
+  .users-table td:first-child {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.users-table {
+  padding: 1rem;
+}
+.mail-header, .mail-value{
+  display: none;
+}
+.users-table select {
+  padding: 0;
+}
+.users-table button{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+  .user-container, .card {
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .user-card {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .section-list {
+    padding: 0;
+  }
+
+  .section-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .modal-content {
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  button {
+    padding: 10px;
+  }
+}
+@media (max-width: 390px) {
+  .users-table {
+    padding: 0;
+    padding-top: 0.25rem;
+  }
+}
+@media (max-width: 390px) {
+  .users-table td:first-child {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+}
 </style>

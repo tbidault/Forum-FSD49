@@ -1,64 +1,66 @@
       import { inject } from 'vue';
 <template>
-  <div class="formBlockLayout">
-    <form class="formBlock6" @submit.prevent="onSubmit">
-      <h2 class="formTitle">Création de compte</h2>
-      <input
-        id="name"
-        v-model="name"
-        class="blackPlaceholder"
-        placeholder="Nom"
-      />
-      <input
-        id="email"
-        v-model="email"
-        type="email"
-        class="blackPlaceholder"
-        placeholder="E-mail"
-      />
-      <input
-            id="password"
-            v-model="password"
-            type="password"
-            class="blackPlaceholder"
-            placeholder="Mot de passe"
-            required
-          />
-          <input
-            id="confirmPassword"
-            v-model="confirmPassword"
-            type="password"
-            class="blackPlaceholder"
-            placeholder="Confirmer le mot de passe"
-            required
-          />
-      <div class="AcceptanceofTerms-container">
-        <div class="checkbox-container">
-          <label class="switch">
-            <input v-model="checked" type="checkbox" @change="toggle" />
-            <span class="slider round"></span>
-          </label>
-          <label class="AcceptanceofTermsText">
-            J'accepte les conditions générales du service ainsi que la politique
-            de confidentialité des données.
-          </label>
+  <div id="registerBlock">
+    <div class="formBlockLayout">
+      <form class="formBlockContent" @submit.prevent="onSubmit">
+        <h2 class="formTitle">Création de compte</h2>
+        <input
+          id="name"
+          v-model="name"
+          class="blackPlaceholder"
+          placeholder="Nom"
+        />
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          class="blackPlaceholder"
+          placeholder="E-mail"
+        />
+        <input
+              id="password"
+              v-model="password"
+              type="password"
+              class="blackPlaceholder"
+              placeholder="Mot de passe"
+              required
+            />
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              type="password"
+              class="blackPlaceholder"
+              placeholder="Confirmer le mot de passe"
+              required
+            />
+        <div class="AcceptanceofTerms-container">
+          <div class="checkbox-container">
+            <label class="switch">
+              <input v-model="checked" type="checkbox" @change="toggle" />
+              <span class="slider round"></span>
+            </label>
+            <label class="AcceptanceofTermsText">
+              J'accepte les conditions générales du service ainsi que la politique
+              de confidentialité des données.
+            </label>
+          </div>
         </div>
-      </div>
-      <p v-if="errors.incompleteForm" id="alert-msg05" class="alert-msg">
-        L'évaluation est incomplète. Veuillez remplir tous les champs.
-      </p>
-      <p v-if="errors.email" id="alert-msg06" class="alert-msg">
-        Veuillez entrer une adresse e-mail valide.
-      </p>
-      <p v-if="errors.password" id="alert-msg07" class="alert-msg">
-        Les mots de passe ne correspondent pas. Veuillez réessayer.
-      </p>
-      <p v-if="errors.checked" id="alert-msg09" class="alert-msg">
-        Vous devez accepter les conditions générales et la politique de
-        confidentialité des données.
-      </p>
-      <SubmitComponent @go-back="goBack" />
-    </form>
+        <p v-if="errors.incompleteForm" id="alert-msg05" class="alert-msg">
+          L'évaluation est incomplète. Veuillez remplir tous les champs.
+        </p>
+        <p v-if="errors.email" id="alert-msg06" class="alert-msg">
+          Veuillez entrer une adresse e-mail valide.
+        </p>
+        <p v-if="errors.password" id="alert-msg07" class="alert-msg">
+          Les mots de passe ne correspondent pas. Veuillez réessayer.
+        </p>
+        <p v-if="errors.checked" id="alert-msg09" class="alert-msg">
+          Vous devez accepter les conditions générales et la politique de
+          confidentialité des données.
+        </p>
+        <SubmitComponent @go-back="goBack" />
+      </form>
+    </div>
   </div>
 </template>
   
@@ -124,11 +126,9 @@ const onSubmit = async () => {
   };
 
   try {
-    console.log("USER", user);
     await axios.post('http://localhost:3000/users', user);
     router.push('/login');
     alert('User registered successfully!');
-    // Reset form fields after successful submission
     name.value = '';
     email.value = '';
     password.value = '';
@@ -150,23 +150,23 @@ const goBack = () => {
 .submit-block {
   margin-top: 1rem;
 }
-.formBlock6 {
+.formBlockContent {
   display: flex;
   flex-direction: column;
 }
-.formBlock6 > *:not(.submit-block) {
+.formBlockContent > *:not(.submit-block) {
   flex: 1;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
   padding-top: 0.65rem;
   padding-bottom: 0.65rem;
 }
-.formBlock6 input,
- /* .formBlock6 input {
+.formBlockContent input,
+ /* .formBlockContent input {
   max-width: 40%;
 }  */
-.formBlock6 input::placeholder,
-.formBlock6 select {
+.formBlockContent input::placeholder,
+.formBlockContent select {
   padding-left: 0.75rem;
 }
 .AcceptanceofTermsText {
@@ -262,6 +262,10 @@ input:checked + .slider:before {
   }
 }
 @media screen and (max-width: 600px) {
+  #registerBlock{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
   .slider {
     width: 29px;
   }

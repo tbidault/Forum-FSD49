@@ -1,7 +1,7 @@
       import { inject } from 'vue';
 <template>
   <div class="formBlockLayout">
-    <form class="formBlock6" @submit.prevent="onSubmit">
+    <form class="formBlockContent" @submit.prevent="onSubmit">
       <h2 class="formTitle">Paramètres</h2>
       <p style="color:black">Modifier ses informations</p>
       <input
@@ -40,8 +40,23 @@
       <div>
         <input type="file" @change="onFileChange" accept="image/png, image/jpeg" />
       </div>
+        <!--
+        <div>
+        <input
+          type="file"
+          id="file-upload"
+          @change="onFileChange"
+          accept="image/png, image/jpeg"
+          class="file-input"
+        />
+        <label for="file-upload" class="edit-btn">Ajouter une image</label>
+      </div>
+        -->
       <SubmitComponent />
     </form>
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 1.5rem; margin-bottom: 1rem">
+      <button @click="deleteAccount" class="delete-btn">Supprimer mon compte</button>
+    </div>
   </div>
 </template>
   
@@ -120,30 +135,83 @@ const onSubmit = async () => {
     alert('An error occurred while updating user data.');
   }
 };
+const deleteAccount = async () => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+    try {
+      const decodedToken = jwtDecode(authStore.token);
+      const userId = decodedToken.id;
+      await axios.delete(`http://localhost:3000/users/${userId}`);
+      authStore.logout();
+      router.push('/login');
+      alert('Votre compte a été supprimé avec succès.');
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l’utilisateur :', error);
+      alert('Échec de la suppression de votre compte.');
+    }
+  }
+};
 
 </script>
 <style src="./form-component.scss" lang="scss"></style>
 <style scoped>
+.delete-btn {
+  /* display: flex;
+  justify-content: center; */
+  height: 2rem;
+  width: 10rem;
+  /* margin-left: auto; */
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #ff1744;
+}
 .submit-block {
   margin-top: 1rem;
 }
-.formBlock6 {
+
+.file-input {
+  display: none;
+}
+
+.edit-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+.edit-btn:hover {
+  background-color: #45a049;
+}
+
+.formBlockContent {
   display: flex;
   flex-direction: column;
 }
-.formBlock6 > *:not(.submit-block) {
+.formBlockContent > *:not(.submit-block) {
   flex: 1;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
   padding-top: 0.65rem;
   padding-bottom: 0.65rem;
 }
-.formBlock6 input,
- /* .formBlock6 input {
+.formBlockContent input,
+ /* .formBlockContent input {
   max-width: 40%;
 }  */
-.formBlock6 input::placeholder,
-.formBlock6 select {
+.formBlockContent input::placeholder,
+.formBlockContent select {
   padding-left: 0.75rem;
 }
 .AcceptanceofTermsText {
