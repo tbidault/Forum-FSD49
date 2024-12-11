@@ -37,6 +37,7 @@ export const getThreadsBySectionId = async (req, res, next) => {
 };
     
 export const addThread = async (req, res, next) => {
+    console.log('addThread', req);
     try {
         const thread = {
             ...req.body,

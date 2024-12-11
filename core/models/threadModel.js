@@ -18,6 +18,7 @@ export const selectThreadByTitle = async (title) => {
 }
 
 export const pushThread = async (newthread) => {
+    console.log('in pushThread', newthread)
     return await db.insert(threads).values(newthread).returning();
 }
 
