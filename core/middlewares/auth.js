@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 export const authMiddleware = async(req, res, next) => {
     const token = req.cookies?.token;
     console.log('req', req.cookies);
-
+    console.log('req.headers', req.headers);
     if(!token) {
         return res.status(401).json({ message: "You are not logged in" });
     }
