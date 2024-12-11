@@ -71,7 +71,7 @@
   
   <script setup>
   import { useRouter } from 'vue-router';
-  import axios from 'axios';
+  import axios from '../http-common';
   import { ref, onMounted, computed } from 'vue';
   import { useAuthStore } from '../stores/authStore';
   import { jwtDecode } from 'jwt-decode';
