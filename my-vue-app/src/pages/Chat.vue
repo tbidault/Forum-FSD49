@@ -105,7 +105,7 @@
       }
     }
 
-    await fetchThreads(sections.value[1].id);
+    await fetchThreads(sections.value[0].id);
   } catch (error) {
     console.error('error !!!', error);
     console.error('Network error:', error.request);

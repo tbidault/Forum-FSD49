@@ -19,7 +19,7 @@ const logout = async () => {
         //await axios.get('https://forum-fsd49.onrender.com/auth/logout');
         //localStorage.removeItem('token');
         await authStore.logout();
-        //router.push('/chat');
+        router.push('/chat');
     }   catch (error) {
             console.error('Logout failed:', error);
     }   finally {

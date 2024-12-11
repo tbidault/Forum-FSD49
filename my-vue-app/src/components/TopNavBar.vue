@@ -22,7 +22,7 @@ watchEffect(() => {
 const logout = async () => {
   try {
     await authStore.logout();
-    router.push('/login');
+    // router.push('/login');
   } catch (error) {
     console.error('Logout failed:', error);
   }

@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await axios.get('https://forum-fsd49.onrender.com/auth/logout');
         this.removeToken();
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         throw new Error('Logout failed');
       }
