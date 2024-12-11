@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const authMiddleware = async(req, res, next) => {
-    const token = req.cookies?.token;
+    const token = req.headers.authorization?.split(' ')[1];
     console.log('req', req.cookies);
     console.log('req.headers', req.headers);
     if(!token) {
