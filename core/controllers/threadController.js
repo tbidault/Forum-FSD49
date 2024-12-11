@@ -38,12 +38,12 @@ export const getThreadsBySectionId = async (req, res, next) => {
     
 export const addThread = async (req, res, next) => {
     console.log('req.body', req.body);
-    console.log('...req.body', ...req.body);
     console.log('req.cookies', req.cookies);
     try {
         const thread = {
             ...req.body,
         };
+        console.log('...req.body -> thread', thread);
         const result = await pushThread(thread);
         res.status(201).json(result);
         console.log('ça fonctionne', result);
