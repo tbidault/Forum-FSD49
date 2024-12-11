@@ -19,6 +19,7 @@ instance.interceptors.request.use(config => {
   const authStore = useAuthStore();
   const token = authStore.token;
   if (token) {
+    console.log("token in http-common");
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

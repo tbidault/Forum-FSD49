@@ -162,7 +162,7 @@ const postSection = async () => {
 const postThread = async () => {
   if (!newThreadTitle.value.trim()) return;
     try {
-      await axios.post('https://forum-fsd49.onrender.com/threads', {
+      await axios.post('/threads', {
       title: newThreadTitle.value,
       section_id: activeSection.value,
     });
