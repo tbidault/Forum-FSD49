@@ -40,7 +40,7 @@
             <div class="msg-header">
               <div class="author-container">
                 <img v-if="post.authorAvatar" 
-                :src="'http://localhost:3000' + post.authorAvatar" 
+                :src="'https://forum-fsd49.onrender.com' + post.authorAvatar" 
                 alt="Avatar" 
                 class="avatar-img" />
               <div><strong class="author-desktop">Auteur:</strong> {{ post.authorName }}</div>
@@ -83,14 +83,14 @@ const fetchPosts = async () => {
   const threadId = route.params.id;
 
   try {
-    const threadResponse = await axios.get(`http://localhost:3000/threads/${threadId}`);
+    const threadResponse = await axios.get(`https://forum-fsd49.onrender.com/threads/${threadId}`);
     threadName.value = threadResponse.data[0].title;
 
-    const response = await axios.get(`http://localhost:3000/posts/thread/${threadId}`);
+    const response = await axios.get(`https://forum-fsd49.onrender.com/posts/thread/${threadId}`);
     posts.value = response.data;
 
     for (const post of posts.value) {
-      const authorResponse = await axios.get(`http://localhost:3000/users/${post.author_id}`);
+      const authorResponse = await axios.get(`https://forum-fsd49.onrender.com/users/${post.author_id}`);
       post.authorName = authorResponse.data[0].username;
       post.authorAvatar = authorResponse.data[0].avatar_url ? authorResponse.data[0].avatar_url : null;
       console.log(post.authorAvatar);
@@ -109,7 +109,7 @@ const postMessage = async () => {
     const decodedToken = jwtDecode(authStore.token);
     const authorId = decodedToken.id;
 
-    const response = await axios.post(`http://localhost:3000/posts`, {
+    const response = await axios.post(`https://forum-fsd49.onrender.com/posts`, {
       content: newMessage.value,
       thread_id: route.params.id,
       author_id: authorId
@@ -130,7 +130,7 @@ const editPost = (postId, content) => {
 
 const updatePost = async (postId, index) => {
   try {
-    await axios.put(`http://localhost:3000/posts/${postId}`, { content: editMessage.value });
+    await axios.put(`https://forum-fsd49.onrender.com/posts/${postId}`, { content: editMessage.value });
     posts.value[index].content = editMessage.value;
     editingPostId.value = null;
   } catch (error) {
@@ -144,7 +144,7 @@ const cancelEdit = () => {
 
 const deletePost = async (postId, index) => {
   try {
-    await axios.delete(`http://localhost:3000/posts/${postId}`);
+    await axios.delete(`https://forum-fsd49.onrender.com/posts/${postId}`);
     posts.value.splice(index, 1);  // Supprimer le post de la liste
   } catch (error) {
     console.error('Erreur lors de la suppression du message:', error);

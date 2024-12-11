@@ -126,7 +126,7 @@ const onSubmit = async () => {
   };
 
   try {
-    await axios.post('http://localhost:3000/users', user);
+    await axios.post('https://forum-fsd49.onrender.com/users', user);
     router.push('/login');
     alert('User registered successfully!');
     name.value = '';

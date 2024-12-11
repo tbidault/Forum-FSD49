@@ -3,10 +3,10 @@ import routes from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import cors from 'cors'
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://forum-fsd49-1.onrender.com',
   credentials: true,
 }));
 

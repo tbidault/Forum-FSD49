@@ -175,7 +175,7 @@ const selectedThread = ref(null);
 
 const updateRole = async (userId, newRole) => {
   try {
-    await axios.put(`http://localhost:3000/users/${userId}`, { role: newRole });
+    await axios.put(`https://forum-fsd49.onrender.com/users/${userId}`, { role: newRole });
     alert('Rôle mis à jour avec succès');
   } catch (error) {
     console.error('Erreur lors de la mise à jour du rôle :', error);
@@ -185,7 +185,7 @@ const updateRole = async (userId, newRole) => {
 const deleteUser = async (userId) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
     try {
-      await axios.delete(`http://localhost:3000/users/${userId}`);
+      await axios.delete(`https://forum-fsd49.onrender.com/users/${userId}`);
       users.value = users.value.filter(user => user.id !== userId);
       alert('Utilisateur supprimé avec succès');
     } catch (error) {
@@ -197,7 +197,7 @@ const deleteUser = async (userId) => {
 
 const fetchUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/users/forAdmin');
+    const response = await axios.get('https://forum-fsd49.onrender.com/users/forAdmin');
     users.value = response.data;
     console.log('Utilisateurs chargés :', users.value);
   } catch (error) {
@@ -208,7 +208,7 @@ const fetchUsers = async () => {
 // const selectUser = async (user) => {
 //   selectedUser.value = user;
 //   try {
-//     const response = await axios.get(`http://localhost:3000/posts/author/${user.id}`);
+//     const response = await axios.get(`https://forum-fsd49.onrender.com/posts/author/${user.id}`);
 //     userMessages.value = response.data;
 //   } catch (error) {
 //     console.error('Erreur lors de la récupération des messages :', error);
@@ -219,13 +219,13 @@ const fetchUsers = async () => {
 const selectUser = async (user) => {
   selectedUser.value = user;
   try {
-    const response = await axios.get(`http://localhost:3000/posts/author/${user.id}`);
+    const response = await axios.get(`https://forum-fsd49.onrender.com/posts/author/${user.id}`);
     const messages = response.data;
 
     const messagesWithThreads = await Promise.all(
       messages.map(async (message) => {
         try {
-          const threadResponse = await axios.get(`http://localhost:3000/threads/${message.thread_id}`);
+          const threadResponse = await axios.get(`https://forum-fsd49.onrender.com/threads/${message.thread_id}`);
           return {
             ...message,
             thread_name: threadResponse.data[0].title,
@@ -250,7 +250,7 @@ const selectUser = async (user) => {
 const deleteMessage = async (messageId) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) {
     try {
-      await axios.delete(`http://localhost:3000/posts/${messageId}`);
+      await axios.delete(`https://forum-fsd49.onrender.com/posts/${messageId}`);
       userMessages.value = userMessages.value.filter(msg => msg.id !== messageId);
       // alert('Message supprimé avec succès');
     } catch (error) {
@@ -262,7 +262,7 @@ const deleteMessage = async (messageId) => {
 
 const fetchSections = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/sections");
+    const response = await axios.get("https://forum-fsd49.onrender.com/sections");
     sections.value = response.data;
     console.log('sections.value', sections.value);
   } catch (error) {
@@ -277,7 +277,7 @@ const addSection = async () => {
   }
   try {
     console.log('newSectionType', newSectionType.value);
-    await axios.post("http://localhost:3000/sections", { type: newSectionType.value });
+    await axios.post("https://forum-fsd49.onrender.com/sections", { type: newSectionType.value });
     newSectionType.value = "";
     fetchSections();
   } catch (error) {
@@ -288,7 +288,7 @@ const addSection = async () => {
 const deleteSection = async (sectionId) => {
   if (confirm("Êtes-vous sûr de vouloir supprimer cette section ?")) {
     try {
-      await axios.delete(`http://localhost:3000/sections/${sectionId}`);
+      await axios.delete(`https://forum-fsd49.onrender.com/sections/${sectionId}`);
       sections.value = sections.value.filter((section) => section.id !== sectionId);
     } catch (error) {
       console.error("Erreur lors de la suppression de la section :", error);
@@ -299,7 +299,7 @@ const deleteSection = async (sectionId) => {
 const selectSection = async (section) => {
   selectedSection.value = section;
   try {
-    const response = await axios.get(`http://localhost:3000/threads/section/${section.id}`);
+    const response = await axios.get(`https://forum-fsd49.onrender.com/threads/section/${section.id}`);
     threads.value = response.data;
     console.log('threads.value', threads.value);
   } catch (error) {
@@ -310,7 +310,7 @@ const selectSection = async (section) => {
 const deleteThread = async (threadId) => {
   if (confirm("Êtes-vous sûr de vouloir supprimer ce thread ?")) {
     try {
-      await axios.delete(`http://localhost:3000/threads/${threadId}`);
+      await axios.delete(`https://forum-fsd49.onrender.com/threads/${threadId}`);
       threads.value = threads.value.filter((thread) => thread.id !== threadId);
     } catch (error) {
       console.error("Erreur lors de la suppression du thread :", error);
@@ -320,7 +320,7 @@ const deleteThread = async (threadId) => {
 const viewThreadMessages = async (threadId) => {
   selectedThread.value = threadId;
   try {
-    const response = await axios.get(`http://localhost:3000/posts/thread/${threadId}`);
+    const response = await axios.get(`https://forum-fsd49.onrender.com/posts/thread/${threadId}`);
     threadMessages.value = response.data;
     console.log('threadMessages.value', response.data[0]);
     console.log('threadMessages.value', threadMessages.value);
@@ -346,7 +346,7 @@ const createThread = async () => {
       title: newThreadTitle.value,
       section_id: selectedSection.value.id,
     };
-    await axios.post("http://localhost:3000/threads", newThread);
+    await axios.post("https://forum-fsd49.onrender.com/threads", newThread);
     await selectSection(selectedSection.value);
     newThreadTitle.value = "";
     showNewThreadForm.value = false;

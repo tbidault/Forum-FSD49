@@ -119,7 +119,7 @@ const onSubmit = async () => {
     const userId = decodedToken.id;
     console.log("FormData Content:", Array.from(formUser.entries()));
     console.log("USER", formUser);
-    await axios.put(`http://localhost:3000/users/${userId}`, formUser, {
+    await axios.put(`https://forum-fsd49.onrender.com/users/${userId}`, formUser, {
       headers: {
         'Content-Type': 'multipart/form-data',
       }
@@ -140,7 +140,7 @@ const deleteAccount = async () => {
     try {
       const decodedToken = jwtDecode(authStore.token);
       const userId = decodedToken.id;
-      await axios.delete(`http://localhost:3000/users/${userId}`);
+      await axios.delete(`https://forum-fsd49.onrender.com/users/${userId}`);
       authStore.logout();
       router.push('/login');
       alert('Votre compte a été supprimé avec succès.');

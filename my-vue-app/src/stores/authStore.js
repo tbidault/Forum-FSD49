@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
         this.isLoading = true;
         const decodedToken = jwtDecode(this.token);
         try {
-          const user = await axios.get(`http://localhost:3000/users/${decodedToken.id}`);
+          const user = await axios.get(`https://forum-fsd49.onrender.com/users/${decodedToken.id}`);
           this.userRole = user.data[0]?.role || null;
           this.isRoleFetched = true;
         } catch (error) {
@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async login(user, router) {
       try {
-        const response = await axios.post('http://localhost:3000/auth/login', user);
+        const response = await axios.post('https://forum-fsd49.onrender.com/auth/login', user);
         this.setToken(response.data.token);
         router.push('/chat');
         return response.data;
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async logout() {
       try {
-        await axios.get('http://localhost:3000/auth/logout');
+        await axios.get('https://forum-fsd49.onrender.com/auth/logout');
         this.removeToken();
         window.location.reload();
       } catch (error) {

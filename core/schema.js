@@ -39,14 +39,14 @@ export const posts = pgTable("posts", {
   modification_date: timestamp("modification_date"),
 });
 
-export const rooms = pgTable('rooms', {
-  id: uuid('id').defaultRandom().primaryKey(), // Identifiant unique du salon
-});
+// export const rooms = pgTable('rooms', {
+//   id: uuid('id').defaultRandom().primaryKey(), // Identifiant unique du salon
+// });
 
-export const messages = pgTable('messages', {
-  id: uuid('id').defaultRandom().primaryKey(),  // Identifiant unique pour chaque message
-  content: text('content').notNull(),           // Contenu du message
-  author: uuid('author').references(() => users.id).notNull(),  // Référence à l'auteur du message
-  roomId: uuid('roomId').references(() => rooms.id).notNull(),  // Référence au salon du message
-  date: timestamp('date').defaultNow().notNull()  // Date et heure du message
-});
+// export const messages = pgTable('messages', {
+//   id: uuid('id').defaultRandom().primaryKey(),  // Identifiant unique pour chaque message
+//   content: text('content').notNull(),           // Contenu du message
+//   author: uuid('author').references(() => users.id).notNull(),  // Référence à l'auteur du message
+//   roomId: uuid('roomId').references(() => rooms.id).notNull(),  // Référence au salon du message
+//   date: timestamp('date').defaultNow().notNull()  // Date et heure du message
+// });

@@ -5,9 +5,9 @@ config({ path: "../.env" });
 
 export default defineConfig({
   schema: "./schema.js",
-  out: "./migrations",
+  out: "./newMigration",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: process.env.DATABASE_URL + '?sslmode=require',
   },
 });

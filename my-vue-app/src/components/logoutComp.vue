@@ -16,7 +16,7 @@ const isLoggingOut = ref(false);
 const logout = async () => {
     isLoggingOut.value = true;
     try {
-        //await axios.get('http://localhost:3000/auth/logout');
+        //await axios.get('https://forum-fsd49.onrender.com/auth/logout');
         //localStorage.removeItem('token');
         await authStore.logout();
         //router.push('/chat');
