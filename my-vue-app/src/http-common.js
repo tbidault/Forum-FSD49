@@ -22,6 +22,9 @@ instance.interceptors.request.use(config => {
     console.log("token in http-common");
     config.headers.Authorization = `Bearer ${token}`;
   }
+  else{
+    console.log("token not found");
+  }
   return config;
 }, error => {
   return Promise.reject(error);
