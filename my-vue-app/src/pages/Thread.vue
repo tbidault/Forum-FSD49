@@ -83,14 +83,14 @@ const fetchPosts = async () => {
   const threadId = route.params.id;
 
   try {
-    const threadResponse = await axios.get(`https://forum-fsd49.onrender.com/threads/${threadId}`);
+    const threadResponse = await axios.get(`/threads/${threadId}`);
     threadName.value = threadResponse.data[0].title;
 
-    const response = await axios.get(`https://forum-fsd49.onrender.com/posts/thread/${threadId}`);
+    const response = await axios.get(`/posts/thread/${threadId}`);
     posts.value = response.data;
 
     for (const post of posts.value) {
-      const authorResponse = await axios.get(`https://forum-fsd49.onrender.com/users/${post.author_id}`);
+      const authorResponse = await axios.get(`/users/${post.author_id}`);
       post.authorName = authorResponse.data[0].username;
       post.authorAvatar = authorResponse.data[0].avatar_url ? authorResponse.data[0].avatar_url : null;
       console.log(post.authorAvatar);
@@ -109,7 +109,7 @@ const postMessage = async () => {
     const decodedToken = jwtDecode(authStore.token);
     const authorId = decodedToken.id;
 
-    const response = await axios.post(`https://forum-fsd49.onrender.com/posts`, {
+    const response = await axios.post(`/posts`, {
       content: newMessage.value,
       thread_id: route.params.id,
       author_id: authorId
@@ -130,7 +130,7 @@ const editPost = (postId, content) => {
 
 const updatePost = async (postId, index) => {
   try {
-    await axios.put(`https://forum-fsd49.onrender.com/posts/${postId}`, { content: editMessage.value });
+    await axios.put(`/posts/${postId}`, { content: editMessage.value });
     posts.value[index].content = editMessage.value;
     editingPostId.value = null;
   } catch (error) {
@@ -144,7 +144,7 @@ const cancelEdit = () => {
 
 const deletePost = async (postId, index) => {
   try {
-    await axios.delete(`https://forum-fsd49.onrender.com/posts/${postId}`);
+    await axios.delete(`/posts/${postId}`);
     posts.value.splice(index, 1);  // Supprimer le post de la liste
   } catch (error) {
     console.error('Erreur lors de la suppression du message:', error);

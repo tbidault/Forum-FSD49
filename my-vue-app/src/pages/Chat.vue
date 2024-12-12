@@ -96,7 +96,7 @@
     if (authStore.token) {
       const decodedToken = jwtDecode(authStore.token);
       try {
-        const user = await axios.get(`https://forum-fsd49.onrender.com/users/${decodedToken.id}`);
+        const user = await axios.get(`/users/${decodedToken.id}`);
         console.log('role ', user.data[0].role);  
         // isAdmin.value = user.data[0].role === 'admin';
       } catch (error) {
@@ -118,7 +118,7 @@
 
   const fetchSections = async () => {
     try {
-      const response = await axios.get('https://forum-fsd49.onrender.com/sections');
+      const response = await axios.get('/sections');
       sections.value = response.data;
       console.log('Sections:', sections.value);
     } catch (error) {
@@ -130,12 +130,12 @@
   loading.value = true;
   activeSection.value = sectionId
   try {
-    const response = await axios.get(`https://forum-fsd49.onrender.com/threads/section/${sectionId}`);
+    const response = await axios.get(`/threads/section/${sectionId}`);
     threads.value = response.data;
     console.log(`Threads pour la section ${sectionId}:`, threads.value);
 
     for (const thread of threads.value) {
-      const postResponse = await axios.get(`https://forum-fsd49.onrender.com/posts/thread/last/${thread.id}`);
+      const postResponse = await axios.get(`/posts/thread/last/${thread.id}`);
       console.log('postResponse.data', postResponse.data);
       if (postResponse.data && postResponse.data.length) {
         latestPosts.value[thread.id] = postResponse.data[0].publication_date;
@@ -150,7 +150,7 @@
 const postSection = async () => {
   if (!newSectionType.value.trim()) return;
     try {
-      await axios.post('https://forum-fsd49.onrender.com/sections', {
+      await axios.post('/sections', {
       type: newSectionType.value,
     });
     newSectionType.value = '';
