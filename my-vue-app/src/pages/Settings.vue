@@ -62,7 +62,7 @@
   
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '../http-common';
 import SubmitComponent from '../components/submit.vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
