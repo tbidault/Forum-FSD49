@@ -58,7 +58,7 @@
           Vous devez accepter les conditions générales et la politique de
           confidentialité des données.
         </p>
-        <SubmitComponent @go-back="goBack" />
+        <SubmitComponent />
       </form>
     </div>
   </div>
@@ -88,10 +88,16 @@ const errors = ref({
   checked: false,
 });
 
+const xssRegex = /[<>]/g;
+const sqlRegex = /['";\-]/g;
+
 const validateEmail = () => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailPattern.test(email.value)) {
+  const sanitizedEmail = email.value.replace(/[<>]/g, '');
+
+  if (!emailPattern.test(sanitizedEmail)) {
     errors.value.email = true;
+    alert('Veuillez entrer une adresse email valide.');
     return false;
   }
   errors.value.email = false;
@@ -118,6 +124,21 @@ const onSubmit = async () => {
     errors.value.checked = true;
     return;
   }
+  if (xssRegex.test(name.value) || sqlRegex.test(name.value)) {
+    errors.value.username = true;
+    alert('Le nom d\'utilisateur contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(password.value) || sqlRegex.test(password.value)) {
+    errors.value.password = true;
+    alert('Le mot de passe contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(confirmPassword.value) || sqlRegex.test(confirmPassword.value)) {
+    errors.value.confirmPassword = true;
+    alert('Le mot de passe contient des caractères invalides.');
+    return;
+  }
 
   const user = {
     username: name.value,
@@ -140,10 +161,6 @@ const onSubmit = async () => {
   }
 };
 
-const goBack = () => {
-  // Emit an event or handle navigation back
-  console.log('Going back...');
-};
 </script>
 <style src="./form-component.scss" lang="scss"></style>
 <style scoped>

@@ -61,7 +61,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from '../http-common';
 import SubmitComponent from '../components/submit.vue';
 import { useRouter } from 'vue-router';
@@ -83,15 +83,31 @@ const errors = ref({
   password: false,
 
 });
+
+const xssRegex = /[<>]/g;
+const sqlRegex = /['";\-]/g;
+
 const avatarFile = ref(null);
 const onFileChange = (event) => {
   avatarFile.value = event.target.files[0];
 };
 
+// const validateEmail = () => {
+//   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//   if (!emailPattern.test(email.value)) {
+//     errors.value.email = true;
+//     return false;
+//   }
+//   errors.value.email = false;
+//   return true;
+// };
 const validateEmail = () => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailPattern.test(email.value)) {
+  const sanitizedEmail = email.value.replace(/[<>]/g, '');
+
+  if (!emailPattern.test(sanitizedEmail)) {
     errors.value.email = true;
+    alert('Veuillez entrer une adresse email valide.');
     return false;
   }
   errors.value.email = false;
@@ -102,6 +118,21 @@ const onSubmit = async () => {
   if (email.value && !validateEmail()) return;
   if ((password.value || confirmPassword.value) && password.value !== confirmPassword.value) {
     errors.value.password = true;
+    return;
+  }
+  if (xssRegex.test(name.value) || sqlRegex.test(name.value)) {
+    errors.value.username = true;
+    alert('Le nom d\'utilisateur contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(password.value) || sqlRegex.test(password.value)) {
+    errors.value.password = true;
+    alert('Le mot de passe contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(confirmPassword.value) || sqlRegex.test(confirmPassword.value)) {
+    errors.value.confirmPassword = true;
+    alert('Le mot de passe contient des caractères invalides.');
     return;
   }
 
@@ -150,6 +181,19 @@ const deleteAccount = async () => {
     }
   }
 };
+onMounted(async () => {
+  try {
+    const decodedToken = jwtDecode(authStore.token);
+    const userId = decodedToken.id;
+
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
+    const userData = response.data;
+    name.value = userData[0].username || '';
+    email.value = userData[0].email || '';
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données utilisateur :', error);
+  }
+});
 
 </script>
 <style src="./form-component.scss" lang="scss"></style>
