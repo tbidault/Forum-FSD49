@@ -83,15 +83,31 @@ const errors = ref({
   password: false,
 
 });
+const xssRegex = /[<>]/g;
+const sqlRegex = /['";\-]/g;
+
 const avatarFile = ref(null);
 const onFileChange = (event) => {
   avatarFile.value = event.target.files[0];
 };
 
+// const validateEmail = () => {
+//   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//   if (!emailPattern.test(email.value)) {
+//     errors.value.email = true;
+//     return false;
+//   }
+//   errors.value.email = false;
+//   return true;
+// };
+
 const validateEmail = () => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailPattern.test(email.value)) {
+  const sanitizedEmail = email.value.replace(/[<>]/g, '');
+
+  if (!emailPattern.test(sanitizedEmail)) {
     errors.value.email = true;
+    alert('Veuillez entrer une adresse email valide.');
     return false;
   }
   errors.value.email = false;
@@ -102,6 +118,22 @@ const onSubmit = async () => {
   if (email.value && !validateEmail()) return;
   if ((password.value || confirmPassword.value) && password.value !== confirmPassword.value) {
     errors.value.password = true;
+    return;
+  }
+  
+  if (xssRegex.test(name.value) || sqlRegex.test(name.value)) {
+    errors.value.username = true;
+    alert('Le nom d\'utilisateur contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(password.value) || sqlRegex.test(password.value)) {
+    errors.value.password = true;
+    alert('Le mot de passe contient des caractères invalides.');
+    return;
+  }
+  if (xssRegex.test(confirmPassword.value) || sqlRegex.test(confirmPassword.value)) {
+    errors.value.confirmPassword = true;
+    alert('Le mot de passe contient des caractères invalides.');
     return;
   }
 
