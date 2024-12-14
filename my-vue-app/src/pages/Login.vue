@@ -20,7 +20,7 @@ import { inject } from 'vue';
           <p v-if="errors.password" id="alert-msg07" class="alert-msg">
         Le mot de passe n'est pas valide. Veuillez réessayer.
       </p>
-      <SubmitComponent @go-back="goBack" />
+      <SubmitComponent />
     </form>
   </div>
 </template>
@@ -45,7 +45,8 @@ const errors = ref({
   username: false,
   password: false,
 });
-
+const xssRegex = /[<>]/g;
+const sqlRegex = /['";\-]/g;
 const onSubmit = async () => {
   errors.value.incompleteForm = false;
   errors.value.password = false;
@@ -54,8 +55,18 @@ const onSubmit = async () => {
     errors.value.incompleteForm = true;
     return;
   }
+  if (xssRegex.test(name.value) || sqlRegex.test(name.value)) {
+    errors.value.username = true;
+    alert('Le nom d\'utilisateur contient des caractères invalides.');
+    return;
+  }
   if (!password.value) {
     errors.value.password = true;
+    return;
+  }
+  if (xssRegex.test(password.value) || sqlRegex.test(password.value)) {
+    errors.value.password = true;
+    alert('Le mot de passe contient des caractères invalides.');
     return;
   }
   const user = {
@@ -73,9 +84,6 @@ const onSubmit = async () => {
   }
 };
 
-const goBack = () => {
-  console.log('Going back...');
-};
 </script>
 <style src="./form-component.scss" lang="scss"></style>
 <style scoped>

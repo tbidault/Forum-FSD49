@@ -61,7 +61,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import SubmitComponent from '../components/submit.vue';
 import { useRouter } from 'vue-router';
@@ -117,8 +117,8 @@ const onSubmit = async () => {
   try {
     const decodedToken = jwtDecode(authStore.token);
     const userId = decodedToken.id;
-    console.log("FormData Content:", Array.from(formUser.entries()));
-    console.log("USER", formUser);
+    // console.log("FormData Content:", Array.from(formUser.entries()));
+    // console.log("USER", formUser);
     await axios.put(`http://localhost:3000/users/${userId}`, formUser, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -151,6 +151,21 @@ const deleteAccount = async () => {
   }
 };
 
+onMounted(async () => {
+  try {
+    const decodedToken = jwtDecode(authStore.token);
+    const userId = decodedToken.id;
+
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
+    const userData = response.data;
+    name.value = userData[0].username || '';
+    email.value = userData[0].email || '';
+    // console.log('userData', userData, 'name.value', name.value, 'email.value', email.value);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données utilisateur :', error);
+    // alert('Impossible de charger vos informations. Veuillez réessayer plus tard.');
+  }
+});
 </script>
 <style src="./form-component.scss" lang="scss"></style>
 <style scoped>
