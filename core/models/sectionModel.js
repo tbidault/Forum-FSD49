@@ -17,3 +17,7 @@ export const pushSection = async (newSection) => {
 export const deleteSection = async (id) => {
     return await db.delete(sections).where(eq(sections.id, id)).returning();
 }
+
+export const updateSection = async (id, updatedData) => {
+    return await db.update(sections).set(updatedData).where(eq(sections.id, id)).returning();
+}

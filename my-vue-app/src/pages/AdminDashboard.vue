@@ -22,7 +22,7 @@
               </select>
             </td>
             <td>
-              <button @click="deleteUser(user.id)" class="delete-btn">Supprimer</button>
+              <button @click="deleteUser(user.id)" class="actions-btn">Supprimer</button>
             </td>
           </tr>
         </tbody>
@@ -52,7 +52,7 @@
                 <p><strong>Message :</strong> {{ message.content }}</p>
                 <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
               </div>
-              <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
+              <button @click="deleteMessage(message.id)" class="actions-btn">Supprimer</button>
               <hr class="message-divider" />
             </li>
           </ul>
@@ -92,13 +92,35 @@
             <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
             -->
             <p style="flex: 1; color:white">{{ section.type }}</p>
-            <button
-              @click.stop="deleteSection(section.id)"
-              class="delete-btn"
-              style="padding: 0.25rem 0.5rem; background-color: #f44336; color: white; border-radius: 4px; border: none;"
-            >
-              Supprimer
-            </button>
+            <div>
+              <div v-if="onRenameModal" id="renameModal" class="modal" >
+                <div id="renameModalContent" class="modal-content">
+                  <input
+                    v-model="newSectionType"
+                    type="text" id="new-section-name"
+                    placeholder="Nouveau nom de la section"
+                    />
+                  <button class="actions-btn" style="background-color: #4caf50; margin-right:0.25rem " @click.stop="renameSection(section.id)">Confirmer</button>
+                  <button class="actions-btn" @click.stop="closeModal">Annuler</button>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column-reverse">
+                <button
+                  @click.stop="openRenameModal"
+                  class="actions-btn"
+                  style="padding: 0.25rem 0.5rem;margin-top: 0.5rem; background-color: #4caf50;width: 80px; color: white; border-radius: 4px; border: none;"
+                >
+                  Renommer
+                </button>
+                <button
+                  @click.stop="deleteSection(section.id)"
+                  class="actions-btn"
+                  style="padding: 0.25rem 0.5rem; background-color: #f44336;width: 80px; color: white; border-radius: 4px; border: none;"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div v-if="selectedSection" class="modal">
@@ -145,7 +167,7 @@
                   <p><strong>Message :</strong> {{ message.content }}</p>
                   <p><strong>Date :</strong> {{ new Date(message.publication_date).toLocaleString() }}</p>
                 </div>
-                <button @click="deleteMessage(message.id)" class="delete-btn">Supprimer</button>
+                <button @click="deleteMessage(message.id)" class="actions-btn">Supprimer</button>
                 <hr class="message-divider" />
               </li>
             </ul>
@@ -172,6 +194,7 @@ const showNewThreadForm = ref(false);
 const newSectionType = ref("");
 const selectedSection = ref(null);
 const selectedThread = ref(null);
+const onRenameModal = ref(null);
 
 const updateRole = async (userId, newRole) => {
   try {
@@ -296,6 +319,17 @@ const deleteSection = async (sectionId) => {
   }
 };
 
+const renameSection = async (sectionId) => {
+  try {
+    await axios.put(`http://localhost:3000/sections/${sectionId}`, { type: newSectionType.value });
+    newSectionType.value = "";
+    fetchSections();
+    closeModal();
+  } catch (error) {
+    console.error("Erreur lors de la modification de la section :", error);
+  }
+};
+
 const selectSection = async (section) => {
   selectedSection.value = section;
   try {
@@ -354,11 +388,15 @@ const createThread = async () => {
     console.error("Erreur lors de la création du thread", error);
   }
 };
-
+const openRenameModal = () =>{
+  onRenameModal.value = true;
+}
 const closeModal = () => {
   selectedUser.value = null;
   userMessages.value = [];
   selectedSection.value = null;
+  onRenameModal.value = null;
+  newSectionType.value = "";
   threads.value = [];
   showNewThreadForm.value = false;
   // selectedThread.value = null;
@@ -509,7 +547,10 @@ button {
   align-items: center;
   z-index: 1000;
 }
-
+#renameModal{
+  background: rgba(0, 0, 0, 0.4);
+  z-index:1001;
+}
 .modal-content {
   background: white;
   color: black;
@@ -557,7 +598,29 @@ button {
   margin: 1rem 0;
 }
 
-.delete-btn {
+#new-section-name{
+  margin-right: 0.5rem;
+  height: 28px;
+  max-width: 200px;
+  /* margin-top: 3rem; */
+  /* height: 80%; */
+}
+#renameModalContent{
+  width:auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#renameModalContent .actions-btn{
+  margin-left: 0;
+}
+/* #rename-modal-content{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+} */
+.actions-btn {
   height: 2rem;
   margin-left: auto;
   background-color: #ff5252;
@@ -568,7 +631,7 @@ button {
   cursor: pointer;
 }
 
-.delete-btn:hover {
+.actions-btn:hover {
   background-color: #ff1744;
 }
 .thread-list {
