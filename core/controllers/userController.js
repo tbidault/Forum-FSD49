@@ -1,5 +1,6 @@
 import { selectUsers, selectUserById, selectUserByName, pushUser, deleteUser, updateUser } from '../models/userModel.js';
 import { upload } from '../upload.js';
+import argon2 from 'argon2';
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -51,6 +52,10 @@ export const addUser = async (req, res, next) => {
         const user = {
             ...req.body,
         };
+        // console.log("user", user);
+        // console.log("user.password", user.password);
+        user.password = await argon2.hash(user.password);
+        // console.log("user", user);
         const result = await pushUser(user);
         res.status(201).json(result);
     }   catch (error) {
@@ -74,12 +79,16 @@ export const updateUserById = async (req, res, next) => {
             return next(err);
         }
     try {
-        console.log("Data:", req.body);
+        // console.log("Data:", req.body);
         const updatedData = { ...req.body };
+        if (updatedData.password) {
+            updatedData.password = await argon2.hash(updatedData.password);
+        }
+        // console.log("Updated Data:", updatedData);
         if (req.file) {
             updatedData.avatar_url = `/uploads/${req.file.filename}`;
           }
-        console.log("Updated Data:", updatedData);
+        // console.log("Updated Data:", updatedData);
         const result = await updateUser(req.params.id, updatedData);
         res.status(201).json(result);
     }
