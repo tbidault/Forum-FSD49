@@ -1,5 +1,8 @@
 import { selectUsers, selectUserById, selectUserByName, pushUser, deleteUser, updateUser } from '../models/userModel.js';
 import { upload } from '../upload.js';
+import pkg from 'cloudinary';
+
+const { v2 : cloudinary } = pkg;
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -74,16 +77,24 @@ export const updateUserById = async (req, res, next) => {
             return next(err);
         }
     try {
-        console.log("Data:", req.body);
+        // console.log("Data:", req.body);
         const updatedData = { ...req.body };
         if (req.file) {
-            updatedData.avatar_url = `/uploads/${req.file.filename}`;
+            const currentUser = await selectUserById(req.params.id);
+            console.log('currentUser', currentUser);
+            if (currentUser[0].avatar_url) {
+                const publicId = currentUser[0].avatar_url.split('/image/upload/')[1].replace(/^v\d+\//, '').split('.')[0];
+                console.log('publicId', publicId);
+                await cloudinary.uploader.destroy(publicId, {invalidate: true});
+            }
+            updatedData.avatar_url = req.file.path;
           }
         console.log("Updated Data:", updatedData);
         const result = await updateUser(req.params.id, updatedData);
         res.status(201).json(result);
     }
     catch (error) {
+        console.error('error', error);
         next(error);
       }
     });
