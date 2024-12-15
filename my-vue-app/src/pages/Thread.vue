@@ -39,8 +39,14 @@
           <div style="display: flex; flex-direction: column">
             <div class="msg-header">
               <div class="author-container">
+                <!--
                 <img v-if="post.authorAvatar" 
                 :src="'http://localhost:3000' + post.authorAvatar" 
+                alt="Avatar" 
+                class="avatar-img" />
+              -->
+              <img v-if="post.authorAvatar" 
+                :src="post.authorAvatar" 
                 alt="Avatar" 
                 class="avatar-img" />
               <div><strong class="author-desktop">Auteur:</strong> {{ post.authorName }}</div>

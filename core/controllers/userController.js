@@ -1,6 +1,9 @@
+import pkg from 'cloudinary';
 import { selectUsers, selectUserById, selectUserByName, pushUser, deleteUser, updateUser } from '../models/userModel.js';
 import { upload } from '../upload.js';
 import argon2 from 'argon2';
+
+const { v2 : cloudinary } = pkg;
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -84,15 +87,25 @@ export const updateUserById = async (req, res, next) => {
         if (updatedData.password) {
             updatedData.password = await argon2.hash(updatedData.password);
         }
-        // console.log("Updated Data:", updatedData);
         if (req.file) {
-            updatedData.avatar_url = `/uploads/${req.file.filename}`;
+            const currentUser = await selectUserById(req.params.id);
+            if (currentUser[0].avatar_url) {
+                // console.log('currentUser[0].avatar_url', currentUser[0].avatar_url);
+                // const publicId = currentUser[0].avatar_url.split('/').pop().split('.')[0];
+                const publicId = currentUser[0].avatar_url.split('/image/upload/')[1].replace(/^v\d+\//, '').split('.')[0];
+                await cloudinary.uploader.destroy(publicId, {invalidate: true});
+            }
+            updatedData.avatar_url = req.file.path;
+            // console.log('before upload', 'req.file', req.file, 'req.file.filename', req.file.path);
+            // const imgUpload = await cloudinary.uploader.upload(req.file.path)
+            // updatedData.avatar_url = imgUpload.secure_url;
+            // updatedData.avatar_url = `/uploads/${req.file.filename}`;
           }
-        // console.log("Updated Data:", updatedData);
         const result = await updateUser(req.params.id, updatedData);
         res.status(201).json(result);
     }
     catch (error) {
+        console.error('Error uploading to Cloudinary:', error);
         next(error);
       }
     });
