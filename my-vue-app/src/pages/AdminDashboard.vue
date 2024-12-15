@@ -93,7 +93,7 @@
             -->
             <p style="flex: 1; color:white">{{ section.type }}</p>
             <div>
-              <div v-if="onRenameModal" id="renameModal" class="modal" >
+              <div v-if="onRenameModal" id="renameModal" class="modal" @click.stop >
                 <div id="renameModalContent" class="modal-content">
                   <input
                     v-model="newSectionType"
@@ -101,7 +101,7 @@
                     placeholder="Nouveau nom de la section"
                     />
                   <button class="actions-btn" style="background-color: #4caf50; margin-right:0.25rem " @click.stop="renameSection(section.id)">Confirmer</button>
-                  <button class="actions-btn" @click.stop="closeModal">Annuler</button>
+                  <button class="actions-btn" @click="closeModal">Annuler</button>
                 </div>
               </div>
               <div style="display: flex; flex-direction: column-reverse">
