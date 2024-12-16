@@ -17,7 +17,7 @@ import BottomNavBar from './components/BottomNavBar.vue';
   </div>
 </template>
 
-<style src="./style.scss" lang="scss"></style>
+<style src="./styles/style.scss" lang="scss"></style>
 <style scoped>
 .logo {
   font-family: 'Arial', sans-serif;

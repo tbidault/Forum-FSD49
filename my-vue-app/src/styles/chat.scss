@@ -1,0 +1,75 @@
+.chat-container {
+    padding: 20px;
+    padding-top: 40px;
+    /* margin-top: 2rem; */
+    border-radius: 10px;
+    border: 2px solid #333;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+  .thread-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .thread-title {
+    flex: 1;
+  }
+  .thread-date {
+    flex: 1;
+    text-align: right;
+  }
+  .chat-subTitles{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .thread-elem{
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .thread-list{
+    margin-top:2rem;
+    margin-bottom: 2rem;
+  }
+  @media screen and (min-width: 1200px) {
+    main{
+      min-width: 550px;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    h1{
+      font-size: 1.5rem; /* 24px */
+line-height: 2rem; /* 32px */
+    }
+    main {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .chat-container {
+      padding-top: 30px;
+    }
+    .thread-list{
+      margin-top:1rem;
+      margin-bottom: 1rem;
+    }
+    .thread-item{
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    .thread-elem{
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+    #last-post{
+      display: none;
+    }
+    .thread-date{
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }

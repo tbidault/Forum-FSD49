@@ -85,7 +85,7 @@ const onSubmit = async () => {
 };
 
 </script>
-<style src="./form-component.scss" lang="scss"></style>
+<style src="../styles/form-component.scss" lang="scss"></style>
 <style scoped>
 .submit-block {
   margin-top: 1rem;

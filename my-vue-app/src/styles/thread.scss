@@ -1,0 +1,122 @@
+.msg-container {
+    display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      margin-top: 2rem;
+      border-radius: 10px;
+      border: 2px solid #333;
+      background-color: #1e1e1e;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      color: white;
+    }
+    .msg-list {
+      max-width: 50rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .msg-header{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .avatar-img { 
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .author-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .date-container {
+      text-align: right;
+      justify-self: end;
+      /* flex-shrink: 0; */
+    }
+    .new-msg-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    .duo-btn {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .delete-btn {
+    height: 1.75rem;
+    /* margin-left: auto; */
+    background-color: #ff5252;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+  }
+  
+  .delete-btn:hover {
+    background-color: #ff1744;
+  }
+  .edit-btn, .update-btn {
+    margin-right: 0.25rem;
+    padding: 0.5rem;
+    height: 1.75rem;
+    border-radius: 4px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+  }
+  .update-btn{
+    margin-left: 0.25rem;
+  }
+  .msg-item {
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    /* background-color: rgba(255, 255, 255, 0.1); */
+    background: linear-gradient(to top, #272727, #333333);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  @media screen and (max-width: 860px) {
+    .msg-list {
+      max-width: 35rem;
+    }
+  }
+  @media screen and (max-width: 610px) {
+    .msg-list {
+      max-width: 25rem;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    .author-desktop{
+      display: none;
+    }
+    .date-desktop{
+      display: none;
+    }
+    .msg-list {
+      width: 22rem;
+    }
+  }
+  @media screen and (max-width: 380px) {
+    .msg-list {
+      width: 20rem;
+    }
+  }

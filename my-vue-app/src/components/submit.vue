@@ -26,7 +26,7 @@
     name: 'SubmitComponent',
   };
   </script>
-  <style src="../pages/form-component.scss" lang="scss"></style>
+  <style src="../styles/form-component.scss" lang="scss"></style>
   <style scoped>
   @media screen and (min-width: 400px) and (max-width: 450px) {
     .mainSubmitButtonTxt {

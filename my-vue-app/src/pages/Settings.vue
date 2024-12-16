@@ -199,7 +199,7 @@ onMounted(async () => {
   }
 });
 </script>
-<style src="./form-component.scss" lang="scss"></style>
+<style src="../styles/form-component.scss" lang="scss"></style>
 <style scoped>
 .delete-btn {
   /* display: flex;
