@@ -3,7 +3,7 @@
   <div class="formBlockLayout">
     <form class="formBlockContent" @submit.prevent="onSubmit">
       <h2 class="formTitle">Paramètres</h2>
-      <p style="color:black">Modifier ses informations</p>
+      <p class="subTitle-txt">Modifier ses informations</p>
       <input
         id="name"
         v-model="name"
@@ -54,7 +54,7 @@
         -->
       <SubmitComponent />
     </form>
-    <div style="display: flex; justify-content: center; align-items: center; margin-top: 1.5rem; margin-bottom: 1rem">
+    <div class="deleteAccount-container">
       <button @click="deleteAccount" class="delete-btn">Supprimer mon compte</button>
     </div>
   </div>
@@ -215,6 +215,13 @@ onMounted(async () => {
 .delete-btn:hover {
   background-color: #ff1744;
 }
+.deleteAccount-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
 .submit-block {
   margin-top: 1rem;
 }
@@ -238,7 +245,9 @@ onMounted(async () => {
 .edit-btn:hover {
   background-color: #45a049;
 }
-
+.subTitle-txt{
+  color:black
+}
 .formBlockContent {
   display: flex;
   flex-direction: column;

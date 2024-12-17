@@ -1,6 +1,6 @@
 <template>
   <div class="msg-container">
-    <div style="color: white; display: flex; justify-content: center;">
+    <div class="title-container">
       <!--
       <div>thread page</div>
       <div>{{ route.params.id }}</div>
@@ -11,32 +11,24 @@
       <input
             v-model="newMessage"
             placeholder="Nouveau message"
-            style="padding: 0.41rem;"
           />
-          <button @click="postMessage" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+          <button @click="postMessage">
             Envoyer
           </button>
-        <!--
-        <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
-          <input type="text" v-model="newMessage" placeholder="nouveau message" />
-          <button @click="postMessage">envoyer</button>
-        </div>
-        -->
     </div>
     <div v-if="posts.length" class="msg-list">
       <div 
         v-for="(post, index) in posts" 
         :key="index"
         class="msg-item" 
-        style="border-radius: 1rem; color:white; cursor: pointer; padding: 10px; margin-bottom: 0.5rem;"
       >
         <div v-if="editingPostId === post.id" class="duo-btn">
-          <input v-model="editMessage" style="padding: 0.3rem;"/>
+          <input v-model="editMessage" class="edit-msg-input" />
           <button @click="updatePost(post.id, index)" class="update-btn">Mettre à jour</button>
           <button @click="cancelEdit" class="delete-btn">Annuler</button>
         </div>
         <div>
-          <div style="display: flex; flex-direction: column">
+          <div class="msg-content">
             <div class="msg-header">
               <div class="author-container">
                 <!--
@@ -53,7 +45,7 @@
               </div>
               <div class="date-container"><strong class="date-desktop">Date de publication:</strong> {{ new Date(post.publication_date).toLocaleString() }}</div>
             </div>
-            <div style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            <div class="post-content">
               {{ post.content }}
             </div>
           </div>
@@ -175,12 +167,21 @@ const isAuthor = (authorId) => {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     color: white;
   }
+  .title-container{
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
   .msg-list {
     max-width: 50rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  .msg-content {
+    display: flex;
+    flex-direction: column
   }
   .msg-header{
     display: flex;
@@ -213,11 +214,25 @@ const isAuthor = (authorId) => {
     margin-top: 1rem;
     margin-bottom: 2rem;
   }
+  .new-msg-container input {
+    padding: 0.41rem;
+  }
+  .new-msg-container button {
+    margin-left: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+  }
   .duo-btn {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+  }
+  .edit-msg-input {
+    padding: 0.3rem;
   }
   .delete-btn {
   height: 1.75rem;
@@ -245,6 +260,10 @@ const isAuthor = (authorId) => {
 .update-btn{
   margin-left: 0.25rem;
 }
+.post-content{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 .msg-item {
   width: 100%;
   height: auto;
@@ -252,9 +271,11 @@ const isAuthor = (authorId) => {
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+  border-radius: 1rem;
+  color:white;
+  cursor: pointer;
+  padding: 10px;
   margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  /* background-color: rgba(255, 255, 255, 0.1); */
   background: linear-gradient(to top, #272727, #333333);
   border-radius: 4px;
   transition: all 0.3s ease;

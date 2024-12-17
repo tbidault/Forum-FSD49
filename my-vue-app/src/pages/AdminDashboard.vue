@@ -1,6 +1,6 @@
 <template>
-  <main style="margin-top: 2rem;">
-    <div style="width: 100%">
+  <main>
+    <div id="dashboard-layout">
       <h1>Dashboard Administrateur</h1>
       <table class="users-table">
         <thead>
@@ -28,7 +28,7 @@
         </tbody>
       </table>
       <div v-if="users.length" class="user-container">
-        <h2 style="color:white">Liste des utilisateurs</h2>
+        <h2>Liste des utilisateurs</h2>
         <div
           v-for="(user, index) in users"
           :key="index"
@@ -60,27 +60,21 @@
           <button @click="closeModal" class="close-modal-btn">Fermer</button>
         </div>
       </div>
-      <!--
-      <div v-else>
-        <p style="color: white;">Chargement des utilisateurs...</p>
-      </div>
-      -->
       <div class="card">
-        <h2 style="color:white">Gestion des Sections</h2>
-        <div>
+        <h2>Gestion des Sections</h2>
+        <div class="new-section-container">
           <input
             v-model="newSectionType"
             placeholder="Nom de la nouvelle section"
-            style="margin-bottom: 1rem; padding: 0.41rem;"
           />
-          <button @click="addSection" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+          <button @click="addSection">
             Ajouter une section
           </button>
         </div>
         <div v-if="sections.length" class="section-list">
-          <div style="display: flex; justify-content: space-between; color: white; font-weight: bold; padding-bottom: 0.5rem;">
-            <p style="flex: 1;">Nom de la section</p>
-            <p style="width: 80px; text-align: center;">Actions</p>
+          <div class="section-list-header">
+            <p id="section-name">Nom de la section</p>
+            <p id="section-action">Actions</p>
           </div>
           <div
             v-for="section in sections"
@@ -88,10 +82,7 @@
             class="section-item"
             @click="selectSection(section)"
           >
-            <!--
-            <p style="color:white"><strong>Nom de la section :</strong> {{ section.type }}</p>
-            -->
-            <p style="flex: 1; color:white">{{ section.type }}</p>
+            <p class="section-type">{{ section.type }}</p>
             <div>
               <div v-if="onRenameModal" id="renameModal" class="modal" @click.stop >
                 <div id="renameModalContent" class="modal-content">
@@ -100,22 +91,20 @@
                     type="text" id="new-section-name"
                     placeholder="Nouveau nom de la section"
                     />
-                  <button class="actions-btn" style="background-color: #4caf50; margin-right:0.25rem " @click.stop="renameSection(section.id)">Confirmer</button>
+                  <button class="actions-btn rename-section-btn" @click.stop="renameSection(section.id)">Confirmer</button>
                   <button class="actions-btn" @click="closeModal">Annuler</button>
                 </div>
               </div>
-              <div style="display: flex; flex-direction: column-reverse">
+              <div class="actions-on-section-container">
                 <button
                   @click.stop="openRenameModal"
-                  class="actions-btn"
-                  style="padding: 0.25rem 0.5rem;margin-top: 0.5rem; background-color: #4caf50;width: 80px; color: white; border-radius: 4px; border: none;"
+                  class="actions-btn rename"
                 >
                   Renommer
                 </button>
                 <button
                   @click.stop="deleteSection(section.id)"
-                  class="actions-btn"
-                  style="padding: 0.25rem 0.5rem; background-color: #f44336;width: 80px; color: white; border-radius: 4px; border: none;"
+                  class="actions-btn delete"
                 >
                   Supprimer
                 </button>
@@ -415,6 +404,12 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
+main {
+  margin-top: 2rem;
+}
+#dashboard-layout {
+  width: 100%
+}
 button {
   padding: 0.5rem;
   color: white;
@@ -509,6 +504,9 @@ button {
 }
 .user-container {
   margin-top: 2rem;
+}
+.user-container h2 {
+  color:white;
 }
 .user-card {
   display: flex;
@@ -627,6 +625,31 @@ button {
 .actions-btn:hover {
   background-color: #ff1744;
 }
+.rename-section-btn {
+  background-color: #4caf50;
+  margin-right:0.25rem
+}
+.actions-on-section-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.actions-on-section-container .rename {
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.5rem;
+  background-color: #4caf50;
+  width: 80px;
+  color: white;
+  border-radius: 4px;
+  border: none;
+}
+.actions-on-section-container .delete {
+  padding: 0.25rem 0.5rem;
+  background-color: #f44336;
+  width: 80px;
+  color: white;
+  border-radius: 4px;
+  border: none;
+}
 .thread-list {
   list-style: none;
   padding: 0;
@@ -686,7 +709,21 @@ button {
 .new-thread-btn:focus {
   outline: none;
 }
-
+.new-section-container input {
+  margin-bottom: 1rem;
+  padding: 0.41rem;
+}
+.new-section-container button {
+  margin-left: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+}
+.card h2 {
+  color:white;
+}
 .card, .user-container, .users-table {
     padding: 20px;
     margin-top: 2rem;
@@ -715,6 +752,24 @@ button {
 .section-item:hover {
   background-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.section-type {
+  flex: 1;
+  color:white
+}
+.section-list-header {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
+#section-name {
+  flex: 1;
+}
+#section-action {
+  width: 80px;
+  text-align: center;
 }
 @media (max-width: 768px) {
   h1{

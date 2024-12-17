@@ -1,40 +1,25 @@
 <template>
   <main>
-    <h1 style="text-align: center; margin-top: 2.5rem;">Espace de discussion</h1>
+    <h1>Espace de discussion</h1>
     <div class="chat-container">
-      <!--
-      <div v-if="isAdmin">
-        <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
-            <input type="text" v-model="newSectionType" placeholder="nouvelle section" />
-            <button @click="postSection()">créer</button>
-          </div>
-      </div>
-      -->
       <div v-if="sections.length">
-        <div style="display: flex;flex-direction: row;justify-content: space-around">
+        <div class="section-container">
           <div 
               v-for="(section, index) in sections" 
-              :key="index" 
+              :key="index"
+              class="section-elem" 
               @click="fetchThreads(section.id, index)" 
-              style="color:white; cursor: pointer; border: 1px solid; padding: 10px;"
               >
               {{ section.type }}
           </div>
         </div>
         <div v-if="isAuthenticated && activeSection">
-          <!--
-          <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
-            <input type="text" v-model="newThreadTitle" placeholder="nouveau thread" />
-            <button @click="postThread()">créer</button>
-          </div>
-          -->
-          <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: center;">
+          <div class="newThread-container">
             <input
             v-model="newThreadTitle"
             placeholder="Nouveau sujet"
-            style="padding: 0.41rem;"
           />
-          <button @click="postThread" style="margin-left: 0.25rem; padding: 0.5rem; border-radius: 4px; border: none; background-color: #4caf50; color: white;">
+          <button @click="postThread">
             Envoyer
           </button>
           </div>
@@ -44,11 +29,10 @@
             <p>Liste des sujets</p>
             <p id="last-post">Dernier message</p>
           </div> 
-          <div v-for="(thread, threadIndex) in threads" :key="threadIndex" class="thread-item" style="color:white;margin-bottom: 0.5rem">
+          <div v-for="(thread, threadIndex) in threads" :key="threadIndex" class="thread-item">
             <span 
               @click="goToThread(thread.id)"
               class="thread-elem thread-title" 
-              style="cursor: pointer; color: white;"
             >
               {{ thread.title }}
             </span>
@@ -59,10 +43,6 @@
             </span>
           </div>
         </div>
-        <!--
-          <div v-else-if="loading">Chargement des threads...</div>
-        -->
-        
         <div v-else-if="!sections.length">Chargement des sections...</div>
       </div>
     </div>
@@ -179,6 +159,10 @@ const postThread = async () => {
   // }
 </script>
 <style scoped>
+h1 {
+  text-align: center;
+  margin-top: 2.5rem;
+}
 .chat-container {
     padding: 20px;
     padding-top: 40px;
@@ -189,13 +173,45 @@ const postThread = async () => {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     color: white;
   }
+  .section-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .section-elem {
+    color:white;
+    cursor: pointer;
+    border: 1px solid;
+    padding: 10px;
+  }
+  .newThread-container {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  .newThread-container input {
+    padding: 0.41rem;
+  }
+  .newThread-container button {
+    margin-left: 0.25rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+  }
   .thread-item{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    color:white;
+    margin-bottom: 0.5rem
   }
   .thread-title {
     flex: 1;
+    cursor: pointer;
+    color: white;
   }
   .thread-date {
     flex: 1;
