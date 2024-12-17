@@ -1,6 +1,7 @@
 import { selectUsers, selectUserById, selectUserByName, pushUser, deleteUser, updateUser } from '../models/userModel.js';
 import { upload } from '../upload.js';
 import pkg from 'cloudinary';
+import argon2 from 'argon2';
 
 const { v2 : cloudinary } = pkg;
 
@@ -54,6 +55,7 @@ export const addUser = async (req, res, next) => {
         const user = {
             ...req.body,
         };
+        user.password = await argon2.hash(user.password);
         const result = await pushUser(user);
         res.status(201).json(result);
     }   catch (error) {
@@ -79,6 +81,9 @@ export const updateUserById = async (req, res, next) => {
     try {
         // console.log("Data:", req.body);
         const updatedData = { ...req.body };
+        if (updatedData.password) {
+            updatedData.password = await argon2.hash(updatedData.password);
+        }
         if (req.file) {
             const currentUser = await selectUserById(req.params.id);
             console.log('currentUser', currentUser);
