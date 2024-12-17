@@ -42,7 +42,7 @@
         <div v-if="threads.length" class="thread-list">
           <div class="chat-subTitles">
             <p>Liste des sujets</p>
-            <p id="last-post">Dernier post</p>
+            <p id="last-post">Dernier message</p>
           </div> 
           <div v-for="(thread, threadIndex) in threads" :key="threadIndex" class="thread-item" style="color:white;margin-bottom: 0.5rem">
             <span 
