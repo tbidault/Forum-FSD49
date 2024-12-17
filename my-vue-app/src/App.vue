@@ -5,15 +5,17 @@ import BottomNavBar from './components/BottomNavBar.vue';
 </script>
 
 <template>
-  <div class="background">
-    <div class="row">
+  <div class="app-container background">
+    <header class="header row">
       <h1 class="logo">TECHNOFORUM</h1>
       <TopNavBar class="navbar"/>
-    </div>
-    <div class="main-content col">
+    </header>
+    <main class="main-content">
       <router-view />
+    </main>
+    <footer class="footer">
       <BottomNavBar />
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -54,13 +56,36 @@ import BottomNavBar from './components/BottomNavBar.vue';
   align-items: center;
   justify-content: center;
 }
+.header {
+  flex:0;
+}
+.main-content{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* align-items: center; */
+}
+.footer {
+  flex: 0;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  color: white;
+  padding: 10px 0;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 .background {
   /* background-image: url(https://oleciocdn.fra1.cdn.digitaloceanspaces.com/prod/CorporatePage/background-img-wood.jpg); */
   /* background: linear-gradient(to top, #000000, #333333); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100%;
+  min-height: 100vh;
   width: auto;
   margin: 0;
   padding: 0;
