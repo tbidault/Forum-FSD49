@@ -9,7 +9,7 @@
         <p>Si vous rencontrez des difficultés techniques ou que vous avez des interrogations, n'hésitez pas à nous contacter à l'adresse suivante : "OPGH-webdev@proton.me".</p>
         </div>
     </main>
-    <section class="cta-container">
+    <section v-if="!authStore.token" class="cta-container">
       <h2>Rejoignez-nous dès aujourd'hui !</h2>
       <p>Inscrivez-vous pour participer à nos discussions passionnantes.</p>
       <router-link to="/register"><button class="cta-button">S'inscrire</button></router-link>
@@ -33,6 +33,8 @@
   import { onMounted, ref } from "vue";
   import axios from '../http-common';
   import { useRoute } from 'vue-router';
+  import { useAuthStore } from "../stores/authStore";
+
   export default {
     name: 'HomePage',
     setup() {
@@ -56,8 +58,9 @@
           console.error("Erreur lors de la récupération des stats :", error);
         }
       }
+      const authStore = useAuthStore();
       onMounted(async () => await getStats());
-      return { stats };
+      return { stats, authStore };
     }
   }
   </script>
