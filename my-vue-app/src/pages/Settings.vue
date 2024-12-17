@@ -186,7 +186,7 @@ onMounted(async () => {
     const decodedToken = jwtDecode(authStore.token);
     const userId = decodedToken.id;
 
-    const response = await axios.get(`http://localhost:3000/users/${userId}`);
+    const response = await axios.get(`/users/${userId}`);
     const userData = response.data;
     name.value = userData[0].username || '';
     email.value = userData[0].email || '';
